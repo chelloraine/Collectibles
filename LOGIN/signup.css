@@ -1,0 +1,77 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensures that the body takes at least the full height of the viewport */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.login-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    max-height: 90%; /* Limit the height to prevent overflow */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+label {
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Container for the first and last name fields */
+.name-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+/* Each name field (First Name and Last Name) */
+.name-field {
+    width: 48%;
+}
+
+@media (max-width: 500px) {
+    .name-container {
+        flex-direction: column;
+    }
+    .name-field {
+        width: 100%;
+    }
+}
