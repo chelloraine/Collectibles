@@ -45,7 +45,7 @@ $user = $result->fetch_assoc();
             <li><a href="#">My Orders</a></li>
             <li><a href="#">Wishlist</a></li>
             <li><a href="#">Messages</a></li>
-            <li><a href="#">Account Settings</a></li>
+            <li><a href="#Account-settings">Account Settings</a></li>
         </ul>
     </aside>
 
@@ -54,16 +54,13 @@ $user = $result->fetch_assoc();
         <h1>Welcome, <?php echo htmlspecialchars($user['username']); ?>!</h1>
         
         <!-- Profile Picture -->
-        <div class="profile-picture-container">
+        <div class="Account-settings">
             <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
             <form method="POST" enctype="multipart/form-data">
                 <input type="file" name="profile_picture" accept="image/*">
                 <button type="submit" name="upload_picture" class="upload-button">Upload</button>
             </form>
-        </div>
         
-        <!-- Profile Section -->
-        <section class="profile-section">
             <h2>My Profile</h2>
             <form method="POST">
                 <label>First Name:</label>
@@ -83,6 +80,7 @@ $user = $result->fetch_assoc();
                 
                 <button type="submit" name="update_profile">Update Profile</button>
             </form>
+            </div>
         </section>
         
         <!-- Password Change Section -->
