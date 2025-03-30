@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user details including contact number
-$stmt = $conn->prepare("SELECT first_name, last_name, email, username, profile_picture, contact_number FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT first_name, last_name, email, username, profile_picture, contact FROM users WHERE id = ?");
 if ($stmt) {
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
@@ -93,7 +93,7 @@ $conn->close();
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Add New Address</h2>
-            <p><strong>Contact Number:</strong> <?php echo htmlspecialchars($user['contact_number']); ?></p>
+            <p><strong>Contact Number:</strong> <?php echo htmlspecialchars($user['contact']); ?></p>
             <form id="address-form">
                 <input type="text" name="address" placeholder="Enter Address" required>
                 <input type="text" name="city" placeholder="City" required>
