@@ -47,17 +47,20 @@ $conn->close();
         }
 
         .profile-section {
-            width: 60%;
+            width: 40%;
             padding: 20px;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            position: relative;
         }
 
         .address-section {
             display: none;
-            margin-top: 20px;
+            width: 50%;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
         .address-list {
@@ -121,25 +124,25 @@ $conn->close();
             </div>
 
             <span class="saved-addresses" id="toggle-addresses">Saved Addresses</span>
+        </section>
 
-            <!-- Address Section Inside Profile -->
-            <div class="address-section" id="address-section">
-                <h2>My Addresses</h2>
-                <button class="add-address-btn" id="add-address-btn">Add New</button>
-                <div class="address-list">
-                    <?php if (!empty($addresses)): ?>
-                        <?php foreach ($addresses as $address): ?>
-                            <div class="address-item">
-                                <p><strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?></p>
-                                <p><strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?></p>
-                                <p><strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?></p>
-                                <p><strong>ZIP:</strong> <?php echo htmlspecialchars($address['zip']); ?></p>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No saved addresses.</p>
-                    <?php endif; ?>
-                </div>
+        <!-- Address Section Beside Profile -->
+        <section class="address-section" id="address-section">
+            <h2>My Addresses</h2>
+            <button class="add-address-btn" id="add-address-btn">Add New</button>
+            <div class="address-list">
+                <?php if (!empty($addresses)): ?>
+                    <?php foreach ($addresses as $address): ?>
+                        <div class="address-item">
+                            <p><strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?></p>
+                            <p><strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?></p>
+                            <p><strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?></p>
+                            <p><strong>ZIP:</strong> <?php echo htmlspecialchars($address['zip']); ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No saved addresses.</p>
+                <?php endif; ?>
             </div>
         </section>
     </main>
@@ -150,7 +153,7 @@ $conn->close();
 
     <script>
         $(document).ready(function() {
-            // Toggle Address Display
+            // Toggle Address Display Beside Profile
             $("#toggle-addresses").click(function() {
                 $("#address-section").toggle();
             });
