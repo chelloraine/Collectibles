@@ -21,6 +21,12 @@ if ($stmt) {
     die("Error fetching user details: " . $conn->error);
 }
 
+// Fetch user addresses
+$address_stmt = $conn->prepare("SELECT id, address, city, state, zip FROM addresses WHERE user_id = ?");
+$address_stmt->bind_param("i", $user_id);
+$address_stmt->execute();
+$address_result = $address_stmt->get_result();
+
 // Check if 'orders' table exists
 $table_check = $conn->query("SHOW TABLES LIKE 'orders'");
 if ($table_check->num_rows > 0) {
