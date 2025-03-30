@@ -21,8 +21,20 @@
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required placeholder="Enter your username" autocomplete="off">
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required placeholder="Enter your password">
+            <label for="password">Password:</label>
+        <div style="position: relative;">
+        <input type="password" id="password" name="password" style="padding-right: 30px;">
+         <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+        👁️
+        </span>
+    </div>
+
+<script>
+    function togglePassword() {
+        let passwordField = document.getElementById("password");
+        passwordField.type = (passwordField.type === "password") ? "text" : "password";
+    }
+</script>
 
             <button type="submit">Login</button>
         </form>
