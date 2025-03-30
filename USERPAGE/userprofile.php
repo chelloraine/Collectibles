@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch user details including contact number
+// Fetch user details
 $stmt = $conn->prepare("SELECT first_name, last_name, email, username, profile_picture, contact FROM users WHERE id = ?");
 if ($stmt) {
     $stmt->bind_param("i", $user_id);
@@ -20,14 +20,18 @@ if ($stmt) {
 }
 
 // Fetch user addresses
-$address_result = false;
+$addresses = [];
 $table_check = $conn->query("SHOW TABLES LIKE 'addresses'");
 if ($table_check && $table_check->num_rows > 0) {
     $address_stmt = $conn->prepare("SELECT id, address, city, state, zip FROM addresses WHERE user_id = ?");
     if ($address_stmt) {
         $address_stmt->bind_param("i", $user_id);
         $address_stmt->execute();
-        $address_result = $address_stmt->get_result();
+        $result = $address_stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $addresses[] = $row;
+        }
+        $address_stmt->close();
     }
 }
 
@@ -69,28 +73,27 @@ $conn->close();
             </div>
 
             <div class="address-section">
-                <h2>Saved Addresses</h2>
-                <button class="profile-btn" id="add-address-btn" style="float: right;">Add New Address</button>
-                <nav>
-                    <ul id="address-list">
-                        <?php if ($address_result && $address_result->num_rows > 0): ?>
-                            <?php while ($address = $address_result->fetch_assoc()): ?>
-                                <li class="address-item" data-address="<?php echo htmlspecialchars(json_encode($address)); ?>">
-                                    <?php echo htmlspecialchars($address['address'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip']); ?>
-                                </li>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <p>You currently don't have any saved addresses.</p>
-                        <?php endif; ?>
-                    </ul>
-                </nav>
+                <h2 id="saved-addresses">Saved Addresses</h2>
             </div>
         </section>
 
-        <!-- Address Details Display Section -->
-        <section class="address-display" id="address-details">
-            <h2>Selected Address</h2>
-            <p id="full-address">Click on an address to view details</p>
+        <!-- Address Display Section (Initially Hidden) -->
+        <section class="address-display" id="address-container" style="display: none;">
+            <div class="address-header">
+                <h2>My Addresses</h2>
+                <button class="profile-btn" id="add-address-btn">Add New Address</button>
+            </div>
+            <ul id="address-list">
+                <?php if (!empty($addresses)): ?>
+                    <?php foreach ($addresses as $address): ?>
+                        <li class="address-item">
+                            <?php echo htmlspecialchars($address['address'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip']); ?>
+                        </li>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>You currently don't have any saved addresses.</p>
+                <?php endif; ?>
+            </ul>
         </section>
     </main>
 
@@ -100,15 +103,9 @@ $conn->close();
 
     <script>
         $(document).ready(function() {
-            // Handle address click
-            $(".address-item").click(function() {
-                let addressData = JSON.parse($(this).attr("data-address"));
-                $("#full-address").html(
-                    `<strong>Address:</strong> ${addressData.address}<br>
-                    <strong>City:</strong> ${addressData.city}<br>
-                    <strong>State:</strong> ${addressData.state}<br>
-                    <strong>ZIP Code:</strong> ${addressData.zip}`
-                );
+            // Toggle Address Section
+            $("#saved-addresses").click(function() {
+                $("#address-container").fadeToggle();
             });
 
             // Open Add Address Modal
@@ -132,20 +129,24 @@ $conn->close();
             background-color: #f9f9f9;
             min-height: 150px;
             max-width: 400px;
+            float: right;
         }
 
-        #add-address-btn {
-            margin-bottom: 10px;
+        .address-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .address-item {
-            cursor: pointer;
             padding: 8px;
             border-bottom: 1px solid #ddd;
         }
 
-        .address-item:hover {
-            background-color: #f1f1f1;
+        #saved-addresses {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
         }
     </style>
 </body>
