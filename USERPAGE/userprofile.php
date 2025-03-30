@@ -23,14 +23,18 @@ if ($stmt) {
 
 // Fetch user addresses
 $address_stmt = $conn->prepare("SELECT id, address, city, state, zip FROM addresses WHERE user_id = ?");
-$address_stmt->bind_param("i", $user_id);
-$address_stmt->execute();
-$address_result = $address_stmt->get_result();
+if ($address_stmt) {
+    $address_stmt->bind_param("i", $user_id);
+    $address_stmt->execute();
+    $address_result = $address_stmt->get_result();
+} else {
+    die("Error fetching addresses: " . $conn->error);
+}
 
 // Check if 'orders' table exists
+$history_result = false; // Default to false if table doesn't exist
 $table_check = $conn->query("SHOW TABLES LIKE 'orders'");
-if ($table_check->num_rows > 0) {
-    // Fetch shopping history if the table exists
+if ($table_check && $table_check->num_rows > 0) {
     $history_stmt = $conn->prepare("SELECT order_id, product_name, price, order_date FROM orders WHERE user_id = ? ORDER BY order_date DESC");
     if ($history_stmt) {
         $history_stmt->bind_param("i", $user_id);
@@ -40,8 +44,6 @@ if ($table_check->num_rows > 0) {
     } else {
         die("Error fetching orders: " . $conn->error);
     }
-} else {
-    $history_result = false; // Set to false if table doesn't exist
 }
 
 $conn->close();
@@ -69,22 +71,23 @@ $conn->close();
     </header>
     
     <main class="dashboard-container">
-    <section class="profile-section">
-    <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
-        <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-        <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
-        <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
+        <section class="profile-section">
+            <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
+            <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
+            <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
+            <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
 
-        <!-- Buttons for Edit Profile & Account Settings -->
-    <div class="profile-actions">
-        <a href="edit_profile.php" class="profile-btn">Edit Profile</a>
-        <a href="account_settings.php" class="profile-btn">Account Settings</a>
-    </div>
-    </section>
-  <!-- Address Section -->
-  <section class="address-section">
+            <!-- Buttons for Edit Profile & Account Settings -->
+            <div class="profile-actions">
+                <a href="edit_profile.php" class="profile-btn">Edit Profile</a>
+                <a href="account_settings.php" class="profile-btn">Account Settings</a>
+            </div>
+        </section>
+
+        <!-- Address Section -->
+        <section class="address-section">
             <h2>Saved Addresses</h2>
-            <?php if ($address_result->num_rows > 0): ?>
+            <?php if ($address_result && $address_result->num_rows > 0): ?>
                 <ul>
                     <?php while ($address = $address_result->fetch_assoc()): ?>
                         <li><?php echo htmlspecialchars($address['address'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip']); ?></li>
@@ -96,6 +99,7 @@ $conn->close();
             <a href="add_address.php" class="profile-btn">Add New Address</a>
         </section>
         
+        <!-- Shopping History -->
         <section class="history-section">
             <h2>Shopping History</h2>
             <?php if ($history_result && $history_result->num_rows > 0): ?>
