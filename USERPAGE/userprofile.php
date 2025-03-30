@@ -101,19 +101,33 @@ $conn->close();
         <p>&copy; <?php echo date("Y"); ?> Your Website. All rights reserved.</p>
     </footer>
 
+    <!-- Pop-up Modal for Adding Address -->
+    <div id="address-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Address</h2>
+            <p><strong>Contact Number:</strong> <?php echo htmlspecialchars($user['contact']); ?></p>
+            <form id="address-form">
+                <input type="text" name="address" placeholder="Enter Address" required>
+                <input type="text" name="city" placeholder="City" required>
+                <input type="text" name="state" placeholder="State" required>
+                <input type="text" name="zip" placeholder="ZIP Code" required>
+                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                <button type="submit" class="profile-btn">Save Address</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
-            // Toggle Address Section
             $("#saved-addresses").click(function() {
                 $("#address-container").fadeToggle();
             });
 
-            // Open Add Address Modal
             $("#add-address-btn").click(function() {
                 $("#address-modal").fadeIn();
             });
 
-            // Close Modal
             $(".close").click(function() {
                 $("#address-modal").fadeOut();
             });
