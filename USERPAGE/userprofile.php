@@ -64,7 +64,7 @@ $conn->close();
             <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
             <button id="toggle-address" class="profile-btn">Saved Addresses</button>
             <!-- Sign Out Button -->
-            <a href="website\logout.php"><button id="sign-out-btn" class="profile-btn">Sign Out</button></a>
+            <a href="../logout.php"><button id="sign-out-btn" class="profile-btn">Sign Out</button></a>
         </section>
 
         <section class="address-panel" id="address-panel">
