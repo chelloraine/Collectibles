@@ -44,33 +44,66 @@ $conn->close();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <header>
+        <nav class="top-nav">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Categories</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">Cart</a></li>
+                <li><a href="userprofile.php">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+    
     <main class="dashboard-container">
         <section class="profile-section">
-            <h2>Saved Addresses</h2>
-            <ul class="address-list">
+            <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
+            <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
+            <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
+            <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
+
+            <div class="profile-actions">
+                <a href="edit_profile.php" class="profile-btn">Edit Profile</a>
+                <a href="account_settings.php" class="profile-btn">Account Settings</a>
+            </div>
+
+            <div class="address-section">
+                <h2>Saved Addresses</h2>
                 <?php if ($address_result && $address_result->num_rows > 0): ?>
-                    <?php while ($address = $address_result->fetch_assoc()): ?>
-                        <li class="address-item" onclick="displayAddress('<?php echo htmlspecialchars($address['address']); ?>', '<?php echo htmlspecialchars($address['city']); ?>', '<?php echo htmlspecialchars($address['state']); ?>', '<?php echo htmlspecialchars($address['zip']); ?>')">
-                            <?php echo htmlspecialchars($address['address']); ?>
-                        </li>
-                    <?php endwhile; ?>
+                    <ul>
+                        <?php while ($address = $address_result->fetch_assoc()): ?>
+                            <li class="address-item" data-address="<?php echo htmlspecialchars(json_encode($address)); ?>">
+                                <?php echo htmlspecialchars($address['address']); ?>
+                            </li>
+                        <?php endwhile; ?>
+                    </ul>
                 <?php else: ?>
-                    <p>No saved addresses.</p>
+                    <p>You currently don't have any saved addresses.</p>
                 <?php endif; ?>
-            </ul>
+                <button class="profile-btn" id="add-address-btn">Add New Address</button>
+            </div>
         </section>
         
-        <!-- Display Selected Address -->
         <section class="address-display">
-            <h2>Address Details</h2>
-            <p id="selected-address">Click an address to view details here.</p>
+            <h2>Selected Address</h2>
+            <p id="full-address"></p>
         </section>
     </main>
-    
+
+    <footer>
+        <p>&copy; <?php echo date("Y"); ?> Your Website. All rights reserved.</p>
+    </footer>
+
     <script>
-        function displayAddress(address, city, state, zip) {
-            document.getElementById('selected-address').innerHTML = `<strong>Address:</strong> ${address}<br><strong>City:</strong> ${city}<br><strong>State:</strong> ${state}<br><strong>ZIP Code:</strong> ${zip}`;
-        }
+        $(document).ready(function() {
+            $(".address-item").click(function() {
+                let addressData = JSON.parse($(this).attr("data-address"));
+                let fullAddress = `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zip}`;
+                $("#full-address").text(fullAddress);
+            });
+        });
     </script>
+
 </body>
 </html>
