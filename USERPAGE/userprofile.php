@@ -40,20 +40,32 @@ $conn->close();
     <link rel="stylesheet" href="userprofile.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        .profile-section {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 600px;
+        }
         .address-panel {
-            position: fixed;
-            top: 50%;
-            right: -350px;
-            width: 300px;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            width: 100%;
+            max-width: 300px;
             background: white;
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            transform: translateY(-50%);
-            transition: right 0.3s ease-in-out;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s ease-in-out;
         }
         .address-panel.open {
-            right: 20px;
+            transform: scaleY(1);
         }
         .address-panel h2 {
             margin: 0;
@@ -123,32 +135,32 @@ $conn->close();
             </div>
 
             <span class="saved-addresses" id="toggle-addresses">Saved Addresses</span>
+
+            <!-- Address Panel Inside Profile Section -->
+            <div class="address-panel" id="address-panel">
+                <h2>My Addresses <span class="close-btn">&times;</span></h2>
+                <button class="add-address-btn" id="add-address-btn">Add New</button>
+                <div class="address-list">
+                    <?php if (!empty($addresses)): ?>
+                        <?php foreach ($addresses as $address): ?>
+                            <div class="address-item">
+                                <p><strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?></p>
+                                <p><strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?></p>
+                                <p><strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?></p>
+                                <p><strong>ZIP:</strong> <?php echo htmlspecialchars($address['zip']); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No saved addresses.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
         </section>
     </main>
 
     <footer>
         <p>&copy; <?php echo date("Y"); ?> Your Website. All rights reserved.</p>
     </footer>
-
-    <!-- Pop-out Address Panel -->
-    <div class="address-panel" id="address-panel">
-        <h2>My Addresses <span class="close-btn">&times;</span></h2>
-        <button class="add-address-btn" id="add-address-btn">Add New</button>
-        <div class="address-list">
-            <?php if (!empty($addresses)): ?>
-                <?php foreach ($addresses as $address): ?>
-                    <div class="address-item">
-                        <p><strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?></p>
-                        <p><strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?></p>
-                        <p><strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?></p>
-                        <p><strong>ZIP:</strong> <?php echo htmlspecialchars($address['zip']); ?></p>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>No saved addresses.</p>
-            <?php endif; ?>
-        </div>
-    </div>
 
     <script>
         $(document).ready(function() {
