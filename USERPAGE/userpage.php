@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user details
-$stmt = $conn->prepare("SELECT first_name, last_name, email, username, status, profile_picture, password FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT first_name, last_name, email, username,contact, status, profile_picture, password FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
