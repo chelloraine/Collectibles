@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $result = $stmt->get_result();
     
-    if ($result->num_rows == 1) {
+    if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
         
         // Verify password
@@ -21,22 +21,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];
 
-            // Redirect based on role
-            if (strtolower(trim($row['role'])) === "admin") { 
+            // Redirect based on role (ignore case)
+            if (strcasecmp($row['role'], "admin") === 0) { 
                 $_SESSION['admin_logged_in'] = true;
-                header("Location: http://localhost/website/ADMIN/adminpage.php"); // Redirect to admin page
+                header("Location: /website/ADMIN/adminpage.php"); // Redirect to admin page
                 exit;
             } else {
-                header("Location: http://localhost/website/USERPAGE/userpage.php"); // Redirect normal users
+                header("Location: /website/USERPAGE/userpage.php"); // Redirect normal users
                 exit;
             }
         } else {
-            // Incorrect password case
-            if (strtolower(trim($username)) === "admin") {
-                $_SESSION['error'] = "Access to admin page denied! Incorrect password.";
-            } else {
-                $_SESSION['error'] = "Invalid username or password!";
-            }
+            $_SESSION['error'] = "Invalid username or password!";
             header("Location: loginpage.php"); // Stay on the login page
             exit;
         }
