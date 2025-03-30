@@ -70,24 +70,29 @@ $conn->close();
 
             <div class="address-section">
                 <h2>Saved Addresses</h2>
-                <?php if ($address_result && $address_result->num_rows > 0): ?>
-                    <ul>
-                        <?php while ($address = $address_result->fetch_assoc()): ?>
-                            <li class="address-item" data-address="<?php echo htmlspecialchars(json_encode($address)); ?>">
-                                <?php echo htmlspecialchars($address['address']); ?>
-                            </li>
-                        <?php endwhile; ?>
+                <nav>
+                    <ul id="address-list">
+                        <?php if ($address_result && $address_result->num_rows > 0): ?>
+                            <?php while ($address = $address_result->fetch_assoc()): ?>
+                                <li>
+                                    <a href="#" class="address-link" data-address="<?php echo htmlspecialchars(json_encode($address)); ?>">
+                                        <?php echo htmlspecialchars($address['address']); ?>
+                                    </a>
+                                </li>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <p>You currently don't have any saved addresses.</p>
+                        <?php endif; ?>
                     </ul>
-                <?php else: ?>
-                    <p>You currently don't have any saved addresses.</p>
-                <?php endif; ?>
+                </nav>
                 <button class="profile-btn" id="add-address-btn">Add New Address</button>
             </div>
         </section>
-        
-        <section class="address-display">
+
+        <!-- Address Details Display Section -->
+        <section class="address-display" id="address-details">
             <h2>Selected Address</h2>
-            <p id="full-address"></p>
+            <p id="full-address">Click on an address to view details</p>
         </section>
     </main>
 
@@ -97,13 +102,38 @@ $conn->close();
 
     <script>
         $(document).ready(function() {
-            $(".address-item").click(function() {
+            // Handle address click
+            $(".address-link").click(function(event) {
+                event.preventDefault();
                 let addressData = JSON.parse($(this).attr("data-address"));
-                let fullAddress = `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zip}`;
-                $("#full-address").text(fullAddress);
+                $("#full-address").html(
+                    `<strong>Address:</strong> ${addressData.address}<br>
+                    <strong>City:</strong> ${addressData.city}<br>
+                    <strong>State:</strong> ${addressData.state}<br>
+                    <strong>ZIP Code:</strong> ${addressData.zip}`
+                );
+            });
+
+            // Open Add Address Modal
+            $("#add-address-btn").click(function() {
+                $("#address-modal").fadeIn();
+            });
+
+            // Close Modal
+            $(".close").click(function() {
+                $("#address-modal").fadeOut();
             });
         });
     </script>
 
+    <style>
+        .address-display {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
 </body>
 </html>
