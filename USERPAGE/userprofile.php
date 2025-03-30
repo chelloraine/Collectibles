@@ -69,9 +69,9 @@ $conn->close();
             </div>
 
             <div class="address-section">
-                <h2>Saved Addresses</h2>
-                <nav>
-                    <ul id="address-list">
+                <h2 id="show-addresses">Saved Addresses</h2>
+                <nav id="address-nav" style="display: none;">
+                    <ul>
                         <?php if ($address_result && $address_result->num_rows > 0): ?>
                             <?php while ($address = $address_result->fetch_assoc()): ?>
                                 <li>
@@ -102,6 +102,11 @@ $conn->close();
 
     <script>
         $(document).ready(function() {
+            // Toggle address navigation
+            $("#show-addresses").click(function() {
+                $("#address-nav").toggle();
+            });
+
             // Handle address click
             $(".address-link").click(function(event) {
                 event.preventDefault();
@@ -112,16 +117,6 @@ $conn->close();
                     <strong>State:</strong> ${addressData.state}<br>
                     <strong>ZIP Code:</strong> ${addressData.zip}`
                 );
-            });
-
-            // Open Add Address Modal
-            $("#add-address-btn").click(function() {
-                $("#address-modal").fadeIn();
-            });
-
-            // Close Modal
-            $(".close").click(function() {
-                $("#address-modal").fadeOut();
             });
         });
     </script>
