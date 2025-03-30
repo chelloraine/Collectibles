@@ -54,6 +54,16 @@ $conn->close();
                 <li><a href="userprofile.php">Profile</a></li>
             </ul>
         </nav>
+        
+<aside class="sidebar">
+    <ul>
+        <li><a href="#">My Orders</a></li>
+        <li><a href="#">Wishlist</a></li>
+        <li><a href="#">Messages</a></li>
+        <li><a href="#" id="account-settings-link">Account Settings</a></li>
+    </ul>
+</aside>
+
     </header>
     
     <main class="dashboard-container">
