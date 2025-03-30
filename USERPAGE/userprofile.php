@@ -67,31 +67,30 @@ $conn->close();
                 <a href="edit_profile.php" class="profile-btn">Edit Profile</a>
                 <a href="account_settings.php" class="profile-btn">Account Settings</a>
             </div>
+
+            <div class="address-section">
+                <h2 id="saved-addresses">Saved Addresses</h2>
+                <button class="profile-btn" id="add-address-btn">Add New Address</button>
+            </div>
         </section>
 
-        <section class="address-section">
-            <h2 id="toggle-addresses">Saved Addresses</h2>
-        </section>
-
-        <!-- Address List & Details Display Section -->
-        <section class="address-display" id="address-details" style="display: none;">
+        <!-- Address Details Display Section -->
+        <section class="address-display" id="address-details" style="display:none;">
             <h2>Saved Addresses</h2>
-            <nav>
-                <ul id="address-list">
-                    <?php if ($address_result && $address_result->num_rows > 0): ?>
-                        <?php while ($address = $address_result->fetch_assoc()): ?>
-                            <li>
-                                <a href="#" class="address-link" data-address="<?php echo htmlspecialchars(json_encode($address)); ?>">
-                                    <?php echo htmlspecialchars($address['address']); ?>
-                                </a>
-                            </li>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <p>You currently don't have any saved addresses.</p>
-                    <?php endif; ?>
-                </ul>
-            </nav>
-            <button class="profile-btn" id="add-address-btn">Add New Address</button>
+            <ul id="address-list">
+                <?php if ($address_result && $address_result->num_rows > 0): ?>
+                    <?php while ($address = $address_result->fetch_assoc()): ?>
+                        <li>
+                            <strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?><br>
+                            <strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?><br>
+                            <strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?><br>
+                            <strong>ZIP Code:</strong> <?php echo htmlspecialchars($address['zip']); ?><br>
+                        </li>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p>You currently don't have any saved addresses.</p>
+                <?php endif; ?>
+            </ul>
         </section>
     </main>
 
@@ -101,38 +100,34 @@ $conn->close();
 
     <script>
         $(document).ready(function() {
-            // Toggle Address List
-            $("#toggle-addresses").click(function() {
+            // Handle 'Saved Addresses' click
+            $("#saved-addresses").click(function() {
                 $("#address-details").toggle();
             });
 
-            // Handle address click
-            $(".address-link").click(function(event) {
-                event.preventDefault();
-                let addressData = JSON.parse($(this).attr("data-address"));
-                $("#address-details").html(
-                    `<h2>Selected Address</h2>
-                    <p><strong>Address:</strong> ${addressData.address}<br>
-                    <strong>City:</strong> ${addressData.city}<br>
-                    <strong>State:</strong> ${addressData.state}<br>
-                    <strong>ZIP Code:</strong> ${addressData.zip}</p>`
-                );
+            // Open Add Address Modal
+            $("#add-address-btn").click(function() {
+                $("#address-modal").fadeIn();
+            });
+
+            // Close Modal
+            $(".close").click(function() {
+                $("#address-modal").fadeOut();
             });
         });
     </script>
 
     <style>
         .address-display {
-            margin-top: 20px;
+            position: absolute;
+            right: 20px;
+            top: 100px;
+            width: 300px;
             padding: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: #f9f9f9;
             display: none;
-            position: absolute;
-            right: 20px;
-            top: 100px;
-            width: 300px;
         }
     </style>
 </body>
