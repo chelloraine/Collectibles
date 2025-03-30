@@ -47,7 +47,7 @@ $conn->close();
     <header>
         <nav class="top-nav">
             <ul>
-                <li><a href="#">Home</a></li>
+                <li><a href="userpage.php">Home</a></li>
                 <li><a href="#">Categories</a></li>
                 <li><a href="#">Notifications</a></li>
                 <li><a href="#">Cart</a></li>
@@ -70,7 +70,7 @@ $conn->close();
                 <h2>My Addresses</h2>
                 <button id="add-address-btn" class="profile-btn">Add New Address</button>
             </div>
-           <div id="address-list">
+            <div id="address-list">
     <?php if ($address_result && $address_result->num_rows > 0): ?>
         <ul>
             <?php while ($address = $address_result->fetch_assoc()): ?>
@@ -94,7 +94,7 @@ $conn->close();
     <?php else: ?>
         <p>You currently don't have any saved addresses.</p>
     <?php endif; ?>
-</div>
+    </div>
         </section>
     </main>
 
@@ -120,14 +120,17 @@ $conn->close();
 
     <script>
 $(document).ready(function() {
+    // Toggle the address panel visibility
     $("#toggle-address").click(function() {
         $("#address-panel").toggle();
     });
 
+    // Show the modal when "Add New Address" button is clicked
     $("#add-address-btn").click(function() {
         $("#address-modal").fadeIn();
     });
 
+    // Close the modal when the close button is clicked
     $(".close").click(function() {
         $("#address-modal").fadeOut();
     });
@@ -211,6 +214,37 @@ $(document).ready(function() {
             border: none;
             cursor: pointer;
             border-radius: 5px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 40%;
+            position: relative;
+            margin: auto;
+        }
+
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+            font-size: 20px;
         }
     </style>
 </body>
