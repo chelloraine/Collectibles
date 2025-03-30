@@ -73,7 +73,13 @@ $conn->close();
                 <?php if ($address_result && $address_result->num_rows > 0): ?>
                     <ul>
                         <?php while ($address = $address_result->fetch_assoc()): ?>
-                            <li><?php echo htmlspecialchars($address['address'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip']); ?></li>
+                            <li>
+                                <?php echo htmlspecialchars($address['address'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip']); ?>
+                                <form method="POST" action="delete_address.php" style="display:inline;">
+                                    <input type="hidden" name="address_id" value="<?php echo $address['id']; ?>">
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            </li>
                         <?php endwhile; ?>
                     </ul>
                 <?php else: ?>
@@ -88,82 +94,15 @@ $conn->close();
         <p>&copy; <?php echo date("Y"); ?> Your Website. All rights reserved.</p>
     </footer>
 
-    <!-- Pop-up Modal for Adding Address -->
-    <div id="address-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Add New Address</h2>
-            <p><strong>Contact Number:</strong> <?php echo htmlspecialchars($user['contact']); ?></p>
-            <form id="address-form">
-                <input type="text" name="address" placeholder="Enter Address" required>
-                <input type="text" name="city" placeholder="City" required>
-                <input type="text" name="state" placeholder="State" required>
-                <input type="text" name="zip" placeholder="ZIP Code" required>
-                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                <button type="submit" class="profile-btn">Save Address</button>
-            </form>
-        </div>
-    </div>
-
     <script>
         $(document).ready(function() {
-            // Open Modal
             $("#add-address-btn").click(function() {
                 $("#address-modal").fadeIn();
             });
-
-            // Close Modal
             $(".close").click(function() {
                 $("#address-modal").fadeOut();
             });
-
-            // AJAX Form Submission
-            $("#address-form").submit(function(e) {
-                e.preventDefault();
-
-                $.ajax({
-                    type: "POST",
-                    url: "save_address.php",
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        alert(response);
-                        location.reload(); // Refresh page after submission
-                    }
-                });
-            });
         });
     </script>
-
-    <style>
-        /* Modal Styling */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 40%;
-            position: relative;
-            margin: auto;
-        }
-        .close {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            cursor: pointer;
-            font-size: 20px;
-        }
-    </style>
-
 </body>
 </html>
