@@ -15,6 +15,27 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
+$stmt->close();
+
+// Handle profile picture upload
+if (isset($_POST['upload_picture']) && isset($_FILES['profile_picture'])) {
+    $target_dir = "../uploads/";
+    $target_file = $target_dir . basename($_FILES["profile_picture"]["name"]);
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+
+    if (in_array($imageFileType, $allowed_types)) {
+        if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $target_file)) {
+            $stmt = $conn->prepare("UPDATE users SET profile_picture = ? WHERE id = ?");
+            $stmt->bind_param("si", $_FILES["profile_picture"]["name"], $user_id);
+            $stmt->execute();
+            $stmt->close();
+            
+            header("Location: userprofile.php"); // Refresh to show new image
+            exit;
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +75,7 @@ $user = $result->fetch_assoc();
         <h1>Welcome, <?php echo htmlspecialchars($user['username']); ?>!</h1>
         
         <!-- Profile Picture -->
-        <div class="Account-settings">
+        <div class="account-settings">
             <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
             <form method="POST" enctype="multipart/form-data">
                 <input type="file" name="profile_picture" accept="image/*">
@@ -80,8 +101,7 @@ $user = $result->fetch_assoc();
                 
                 <button type="submit" name="update_profile">Update Profile</button>
             </form>
-            </div>
-        </section>
+        </div>
         
         <!-- Password Change Section -->
         <section class="password-section">
