@@ -70,21 +70,19 @@ $conn->close();
 
             <div class="address-section">
                 <h2 id="saved-addresses">Saved Addresses</h2>
-                <button class="profile-btn" id="add-address-btn">Add New Address</button>
             </div>
         </section>
 
-        <!-- Address Details Display Section -->
-        <section class="address-display" id="address-details" style="display:none;">
-            <h2>Saved Addresses</h2>
+        <!-- Address List Display Section -->
+        <section class="address-display" id="address-details">
+            <h2>Address List</h2>
             <ul id="address-list">
                 <?php if ($address_result && $address_result->num_rows > 0): ?>
                     <?php while ($address = $address_result->fetch_assoc()): ?>
                         <li>
-                            <strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?><br>
-                            <strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?><br>
-                            <strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?><br>
-                            <strong>ZIP Code:</strong> <?php echo htmlspecialchars($address['zip']); ?><br>
+                            <a href="#" class="address-link" data-address="<?php echo htmlspecialchars(json_encode($address)); ?>">
+                                <?php echo htmlspecialchars($address['address']); ?>
+                            </a>
                         </li>
                     <?php endwhile; ?>
                 <?php else: ?>
@@ -100,29 +98,24 @@ $conn->close();
 
     <script>
         $(document).ready(function() {
-            // Handle 'Saved Addresses' click
             $("#saved-addresses").click(function() {
                 $("#address-details").toggle();
-            });
-
-            // Open Add Address Modal
-            $("#add-address-btn").click(function() {
-                $("#address-modal").fadeIn();
-            });
-
-            // Close Modal
-            $(".close").click(function() {
-                $("#address-modal").fadeOut();
             });
         });
     </script>
 
     <style>
+        .dashboard-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .profile-section {
+            width: 40%;
+        }
+
         .address-display {
-            position: absolute;
-            right: 20px;
-            top: 100px;
-            width: 300px;
+            width: 50%;
             padding: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
