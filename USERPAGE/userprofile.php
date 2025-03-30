@@ -112,20 +112,44 @@ $conn->close();
     </div>
 
     <script>
-        $(document).ready(function() {
-            $("#toggle-address").click(function() {
-                $("#address-panel").toggle();
-            });
+$(document).ready(function() {
+    $("#toggle-address").click(function() {
+        $("#address-panel").toggle();
+    });
 
-            $("#add-address-btn").click(function() {
-                $("#address-modal").fadeIn();
-            });
+    $("#add-address-btn").click(function() {
+        $("#address-modal").fadeIn();
+    });
 
-            $(".close").click(function() {
-                $("#address-modal").fadeOut();
-            });
+    $(".close").click(function() {
+        $("#address-modal").fadeOut();
+    });
+
+    // Handle form submission via AJAX
+    $("#address-form").submit(function(e) {
+        e.preventDefault(); // Prevent default form submission
+        
+        $.ajax({
+            type: "POST",
+            url: "save_address.php",
+            data: $(this).serialize(),
+            dataType: "json",
+            success: function(response) {
+                if (response.status === "success") {
+                    alert(response.message);
+                    location.reload(); // Reload page to show the new address
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                alert("An error occurred. Please try again.");
+            }
         });
-    </script>
+    });
+});
+</script>
+
 
     <style>
         .dashboard-container {
