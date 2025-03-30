@@ -95,6 +95,22 @@ $conn->close();
         <p>&copy; <?php echo date("Y"); ?> Your Website. All rights reserved.</p>
     </footer>
 
+    <!-- Address Input Modal -->
+    <div id="address-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Address</h2>
+            <form id="address-form">
+                <input type="text" name="address" placeholder="Enter Address" required>
+                <input type="text" name="city" placeholder="City" required>
+                <input type="text" name="state" placeholder="State" required>
+                <input type="text" name="zip" placeholder="ZIP Code" required>
+                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                <button type="submit" class="profile-btn">Save Address</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             $("#toggle-address").click(function() {
@@ -110,5 +126,50 @@ $conn->close();
             });
         });
     </script>
+
+    <style>
+        .dashboard-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .profile-section {
+            width: 40%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .address-panel {
+            display: none;
+            width: 50%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
+            position: relative;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #add-address-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+
+        .profile-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
 </body>
 </html>
