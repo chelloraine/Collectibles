@@ -47,7 +47,7 @@ $conn->close();
     <header>
         <nav class="top-nav">
             <ul>
-                <li><a href="userpage.php">Home</a></li>
+                <li><a href="#">Home</a></li>
                 <li><a href="#">Categories</a></li>
                 <li><a href="#">Notifications</a></li>
                 <li><a href="#">Cart</a></li>
@@ -63,6 +63,8 @@ $conn->close();
             <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
             <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
             <button id="toggle-address" class="profile-btn">Saved Addresses</button>
+            <!-- Sign Out Button -->
+            <a href="logout.php"><button id="sign-out-btn" class="profile-btn">Sign Out</button></a>
         </section>
 
         <section class="address-panel" id="address-panel">
