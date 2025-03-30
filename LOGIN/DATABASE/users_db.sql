@@ -26,3 +26,5 @@ SELECT * FROM users WHERE username='admin';
 DELETE FROM users 
 WHERE id=2;
 SELECT * FROM users;
+
+ALTER TABLE users ADD COLUMN status ENUM('active', 'inactive', 'banned') NOT NULL DEFAULT 'active';

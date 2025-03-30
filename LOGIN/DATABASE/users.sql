@@ -10,5 +10,3 @@ CREATE TABLE users (
     username VARCHAR(50),
     password VARCHAR(255) 
 );
-
-ALTER TABLE users ADD COLUMN status ENUM('active', 'inactive', 'banned') NOT NULL DEFAULT 'active';
