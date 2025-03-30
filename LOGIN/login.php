@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['admin_logged_in'] = true;
                 header("Location: /website/ADMIN/adminpage.php"); // Redirect to admin page
                 exit;
-            } else {
+            } else {    
                 header("Location: /website/USERPAGE/userpage.php"); // Redirect normal users
                 exit;
             }
