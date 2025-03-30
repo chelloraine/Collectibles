@@ -69,26 +69,28 @@ $conn->close();
             </div>
 
             <div class="address-section">
-                <h2 id="saved-addresses">Saved Addresses</h2>
+                <h2>Saved Addresses</h2>
+                <button class="profile-btn" id="add-address-btn" style="float: right;">Add New Address</button>
+                <nav>
+                    <ul id="address-list">
+                        <?php if ($address_result && $address_result->num_rows > 0): ?>
+                            <?php while ($address = $address_result->fetch_assoc()): ?>
+                                <li class="address-item" data-address="<?php echo htmlspecialchars(json_encode($address)); ?>">
+                                    <?php echo htmlspecialchars($address['address'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip']); ?>
+                                </li>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <p>You currently don't have any saved addresses.</p>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
             </div>
         </section>
 
-        <!-- Address List Display Section -->
+        <!-- Address Details Display Section -->
         <section class="address-display" id="address-details">
-            <h2>Address List</h2>
-            <ul id="address-list">
-                <?php if ($address_result && $address_result->num_rows > 0): ?>
-                    <?php while ($address = $address_result->fetch_assoc()): ?>
-                        <li>
-                            <a href="#" class="address-link" data-address="<?php echo htmlspecialchars(json_encode($address)); ?>">
-                                <?php echo htmlspecialchars($address['address']); ?>
-                            </a>
-                        </li>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <p>You currently don't have any saved addresses.</p>
-                <?php endif; ?>
-            </ul>
+            <h2>Selected Address</h2>
+            <p id="full-address">Click on an address to view details</p>
         </section>
     </main>
 
@@ -98,29 +100,52 @@ $conn->close();
 
     <script>
         $(document).ready(function() {
-            $("#saved-addresses").click(function() {
-                $("#address-details").toggle();
+            // Handle address click
+            $(".address-item").click(function() {
+                let addressData = JSON.parse($(this).attr("data-address"));
+                $("#full-address").html(
+                    `<strong>Address:</strong> ${addressData.address}<br>
+                    <strong>City:</strong> ${addressData.city}<br>
+                    <strong>State:</strong> ${addressData.state}<br>
+                    <strong>ZIP Code:</strong> ${addressData.zip}`
+                );
+            });
+
+            // Open Add Address Modal
+            $("#add-address-btn").click(function() {
+                $("#address-modal").fadeIn();
+            });
+
+            // Close Modal
+            $(".close").click(function() {
+                $("#address-modal").fadeOut();
             });
         });
     </script>
 
     <style>
-        .dashboard-container {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .profile-section {
-            width: 40%;
-        }
-
         .address-display {
-            width: 50%;
+            margin-top: 20px;
             padding: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: #f9f9f9;
-            display: none;
+            min-height: 150px;
+            max-width: 400px;
+        }
+
+        #add-address-btn {
+            margin-bottom: 10px;
+        }
+
+        .address-item {
+            cursor: pointer;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .address-item:hover {
+            background-color: #f1f1f1;
         }
     </style>
 </body>
