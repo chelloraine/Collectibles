@@ -81,7 +81,20 @@ $conn->close();
         <a href="account_settings.php" class="profile-btn">Account Settings</a>
     </div>
     </section>
-
+  <!-- Address Section -->
+  <section class="address-section">
+            <h2>Saved Addresses</h2>
+            <?php if ($address_result->num_rows > 0): ?>
+                <ul>
+                    <?php while ($address = $address_result->fetch_assoc()): ?>
+                        <li><?php echo htmlspecialchars($address['address'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip']); ?></li>
+                    <?php endwhile; ?>
+                </ul>
+            <?php else: ?>
+                <p>You currently don't have any saved addresses.</p>
+            <?php endif; ?>
+            <a href="add_address.php" class="profile-btn">Add New Address</a>
+        </section>
         
         <section class="history-section">
             <h2>Shopping History</h2>
