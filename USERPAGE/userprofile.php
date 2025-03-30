@@ -44,65 +44,33 @@ $conn->close();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <header>
-        <nav class="top-nav">
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Categories</a></li>
-                <li><a href="#">Notifications</a></li>
-                <li><a href="#">Cart</a></li>
-                <li><a href="userprofile.php">Profile</a></li>
-            </ul>
-        </nav>
-    </header>
-    
     <main class="dashboard-container">
         <section class="profile-section">
-            <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
-            <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-            <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
-            <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
-
-            <div class="profile-actions">
-                <a href="edit_profile.php" class="profile-btn">Edit Profile</a>
-                <a href="account_settings.php" class="profile-btn">Account Settings</a>
-            </div>
-
-            <div class="address-section">
-                <h2>Saved Addresses</h2>
+            <h2>Saved Addresses</h2>
+            <ul class="address-list">
                 <?php if ($address_result && $address_result->num_rows > 0): ?>
-                    <ul>
-                        <?php while ($address = $address_result->fetch_assoc()): ?>
-                            <li>
-                                <?php echo htmlspecialchars($address['address'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip']); ?>
-                                <form method="POST" action="delete_address.php" style="display:inline;">
-                                    <input type="hidden" name="address_id" value="<?php echo $address['id']; ?>">
-                                    <button type="submit" class="delete-btn">Delete</button>
-                                </form>
-                            </li>
-                        <?php endwhile; ?>
-                    </ul>
+                    <?php while ($address = $address_result->fetch_assoc()): ?>
+                        <li class="address-item" onclick="displayAddress('<?php echo htmlspecialchars($address['address']); ?>', '<?php echo htmlspecialchars($address['city']); ?>', '<?php echo htmlspecialchars($address['state']); ?>', '<?php echo htmlspecialchars($address['zip']); ?>')">
+                            <?php echo htmlspecialchars($address['address']); ?>
+                        </li>
+                    <?php endwhile; ?>
                 <?php else: ?>
-                    <p>You currently don't have any saved addresses.</p>
+                    <p>No saved addresses.</p>
                 <?php endif; ?>
-                <button class="profile-btn" id="add-address-btn">Add New Address</button>
-            </div>
+            </ul>
+        </section>
+        
+        <!-- Display Selected Address -->
+        <section class="address-display">
+            <h2>Address Details</h2>
+            <p id="selected-address">Click an address to view details here.</p>
         </section>
     </main>
-
-    <footer>
-        <p>&copy; <?php echo date("Y"); ?> Your Website. All rights reserved.</p>
-    </footer>
-
+    
     <script>
-        $(document).ready(function() {
-            $("#add-address-btn").click(function() {
-                $("#address-modal").fadeIn();
-            });
-            $(".close").click(function() {
-                $("#address-modal").fadeOut();
-            });
-        });
+        function displayAddress(address, city, state, zip) {
+            document.getElementById('selected-address').innerHTML = `<strong>Address:</strong> ${address}<br><strong>City:</strong> ${city}<br><strong>State:</strong> ${state}<br><strong>ZIP Code:</strong> ${zip}`;
+        }
     </script>
 </body>
 </html>
