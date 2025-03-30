@@ -42,13 +42,12 @@ $conn->close();
     <style>
         .dashboard-container {
             display: flex;
-            position: relative;
             gap: 20px;
             align-items: flex-start;
         }
 
         .profile-section {
-            width: 300px;
+            width: 60%;
             padding: 20px;
             background: #fff;
             border-radius: 10px;
@@ -56,36 +55,9 @@ $conn->close();
             position: relative;
         }
 
-        .address-panel {
-            width: 400px;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            position: absolute;
-            right: -420px;
-            top: 0;
+        .address-section {
             display: none;
-            transition: right 0.3s ease-in-out;
-        }
-
-        .address-panel.open {
-            right: 0;
-            display: block;
-        }
-
-        .address-panel h2 {
-            margin: 0;
-            font-size: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .close-btn {
-            cursor: pointer;
-            font-size: 20px;
-            color: red;
+            margin-top: 20px;
         }
 
         .address-list {
@@ -136,7 +108,7 @@ $conn->close();
     </header>
     
     <main class="dashboard-container">
-        <!-- Profile Section (Fixed) -->
+        <!-- Profile Section -->
         <section class="profile-section">
             <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
             <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
@@ -149,25 +121,25 @@ $conn->close();
             </div>
 
             <span class="saved-addresses" id="toggle-addresses">Saved Addresses</span>
-        </section>
 
-        <!-- Address Panel (Pop-Out) -->
-        <section class="address-panel" id="address-panel">
-            <h2>My Addresses <span class="close-btn">&times;</span></h2>
-            <button class="add-address-btn" id="add-address-btn">Add New</button>
-            <div class="address-list">
-                <?php if (!empty($addresses)): ?>
-                    <?php foreach ($addresses as $address): ?>
-                        <div class="address-item">
-                            <p><strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?></p>
-                            <p><strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?></p>
-                            <p><strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?></p>
-                            <p><strong>ZIP:</strong> <?php echo htmlspecialchars($address['zip']); ?></p>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>No saved addresses.</p>
-                <?php endif; ?>
+            <!-- Address Section Inside Profile -->
+            <div class="address-section" id="address-section">
+                <h2>My Addresses</h2>
+                <button class="add-address-btn" id="add-address-btn">Add New</button>
+                <div class="address-list">
+                    <?php if (!empty($addresses)): ?>
+                        <?php foreach ($addresses as $address): ?>
+                            <div class="address-item">
+                                <p><strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?></p>
+                                <p><strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?></p>
+                                <p><strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?></p>
+                                <p><strong>ZIP:</strong> <?php echo htmlspecialchars($address['zip']); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No saved addresses.</p>
+                    <?php endif; ?>
+                </div>
             </div>
         </section>
     </main>
@@ -178,14 +150,9 @@ $conn->close();
 
     <script>
         $(document).ready(function() {
-            // Toggle Address Panel
+            // Toggle Address Display
             $("#toggle-addresses").click(function() {
-                $("#address-panel").toggleClass("open");
-            });
-
-            // Close Panel
-            $(".close-btn").click(function() {
-                $("#address-panel").removeClass("open");
+                $("#address-section").toggle();
             });
         });
     </script>
