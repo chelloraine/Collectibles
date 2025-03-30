@@ -75,6 +75,8 @@ $conn->close();
                     <ul>
                         <?php while ($address = $address_result->fetch_assoc()): ?>
                             <li class="address-item">
+                                <strong>Name:</strong> <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?><br>
+                                <strong>Contact:</strong> <?php echo htmlspecialchars($user['contact']); ?><br>
                                 <strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?><br>
                                 <strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?><br>
                                 <strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?><br>
@@ -93,22 +95,6 @@ $conn->close();
         <p>&copy; <?php echo date("Y"); ?> Your Website. All rights reserved.</p>
     </footer>
 
-    <!-- Address Input Modal -->
-    <div id="address-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Add New Address</h2>
-            <form id="address-form">
-                <input type="text" name="address" placeholder="Enter Address" required>
-                <input type="text" name="city" placeholder="City" required>
-                <input type="text" name="state" placeholder="State" required>
-                <input type="text" name="zip" placeholder="ZIP Code" required>
-                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                <button type="submit" class="profile-btn">Save Address</button>
-            </form>
-        </div>
-    </div>
-
     <script>
         $(document).ready(function() {
             $("#toggle-address").click(function() {
@@ -124,73 +110,5 @@ $conn->close();
             });
         });
     </script>
-
-    <style>
-        .dashboard-container {
-            display: flex;
-            gap: 20px;
-        }
-
-        .profile-section {
-            width: 40%;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .address-panel {
-            display: none;
-            width: 50%;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: #f9f9f9;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .profile-btn {
-            background: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 40%;
-            position: relative;
-            margin: auto;
-        }
-
-        .close {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            cursor: pointer;
-            font-size: 20px;
-        }
-    </style>
 </body>
 </html>
