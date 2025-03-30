@@ -61,27 +61,23 @@ $conn->close();
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
-        .address-list {
-            margin-top: 10px;
-        }
-
-        .address-item {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
+        .address-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .add-address-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
             background: green;
             color: white;
-            padding: 5px 10px;
+            padding: 5px 15px;
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            font-size: 14px;
         }
 
         .saved-addresses {
@@ -94,6 +90,15 @@ $conn->close();
 
         .saved-addresses:hover {
             background: #f0f0f0;
+        }
+
+        .address-list {
+            margin-top: 10px;
+        }
+
+        .address-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
         }
     </style>
 </head>
@@ -128,8 +133,10 @@ $conn->close();
 
         <!-- Address Section Beside Profile -->
         <section class="address-section" id="address-section">
-            <h2>My Addresses</h2>
-            <button class="add-address-btn" id="add-address-btn">Add New</button>
+            <div class="address-header">
+                <h2>My Addresses</h2>
+                <button class="add-address-btn" id="add-address-btn">Add New</button>
+            </div>
             <div class="address-list">
                 <?php if (!empty($addresses)): ?>
                     <?php foreach ($addresses as $address): ?>
