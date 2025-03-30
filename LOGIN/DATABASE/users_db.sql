@@ -28,3 +28,7 @@ WHERE id=2;
 SELECT * FROM users;
 
 ALTER TABLE users ADD COLUMN status ENUM('active', 'inactive', 'banned') NOT NULL DEFAULT 'active';
+SHOW COLUMNS FROM users LIKE 'status';
+SELECT id, first_name, last_name, email, username, role, status FROM users;
+ALTER TABLE users ADD COLUMN profile_picture VARCHAR(255) NULL;
+
