@@ -42,27 +42,36 @@ $conn->close();
     <style>
         .dashboard-container {
             display: flex;
+            position: relative;
             gap: 20px;
             align-items: flex-start;
         }
 
         .profile-section {
-            flex: 1;
+            width: 300px;
             padding: 20px;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .address-panel {
-            flex: 1;
-            max-width: 400px;
+            width: 400px;
             background: white;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            right: -420px;
+            top: 0;
             display: none;
-            animation: fadeIn 0.3s ease-in-out;
+            transition: right 0.3s ease-in-out;
+        }
+
+        .address-panel.open {
+            right: 0;
+            display: block;
         }
 
         .address-panel h2 {
@@ -111,11 +120,6 @@ $conn->close();
         .saved-addresses:hover {
             background: #f0f0f0;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body>
@@ -132,7 +136,7 @@ $conn->close();
     </header>
     
     <main class="dashboard-container">
-        <!-- Profile Section -->
+        <!-- Profile Section (Fixed) -->
         <section class="profile-section">
             <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
             <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
@@ -147,7 +151,7 @@ $conn->close();
             <span class="saved-addresses" id="toggle-addresses">Saved Addresses</span>
         </section>
 
-        <!-- Address Panel (Initially Hidden) -->
+        <!-- Address Panel (Pop-Out) -->
         <section class="address-panel" id="address-panel">
             <h2>My Addresses <span class="close-btn">&times;</span></h2>
             <button class="add-address-btn" id="add-address-btn">Add New</button>
@@ -176,12 +180,12 @@ $conn->close();
         $(document).ready(function() {
             // Toggle Address Panel
             $("#toggle-addresses").click(function() {
-                $("#address-panel").fadeToggle();
+                $("#address-panel").toggleClass("open");
             });
 
             // Close Panel
             $(".close-btn").click(function() {
-                $("#address-panel").fadeOut();
+                $("#address-panel").removeClass("open");
             });
         });
     </script>
