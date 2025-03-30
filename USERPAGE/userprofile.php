@@ -11,16 +11,34 @@ $user_id = $_SESSION['user_id'];
 
 // Fetch user details
 $stmt = $conn->prepare("SELECT first_name, last_name, email, username, profile_picture FROM users WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+if ($stmt) {
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+} else {
+    die("Error fetching user details: " . $conn->error);
+}
 
-// Fetch shopping history
-$history_stmt = $conn->prepare("SELECT order_id, product_name, price, order_date FROM orders WHERE user_id = ? ORDER BY order_date DESC");
-$history_stmt->bind_param("i", $user_id);
-$history_stmt->execute();
-$history_result = $history_stmt->get_result();
+// Check if 'orders' table exists
+$table_check = $conn->query("SHOW TABLES LIKE 'orders'");
+if ($table_check->num_rows > 0) {
+    // Fetch shopping history if the table exists
+    $history_stmt = $conn->prepare("SELECT order_id, product_name, price, order_date FROM orders WHERE user_id = ? ORDER BY order_date DESC");
+    if ($history_stmt) {
+        $history_stmt->bind_param("i", $user_id);
+        $history_stmt->execute();
+        $history_result = $history_stmt->get_result();
+        $history_stmt->close();
+    } else {
+        die("Error fetching orders: " . $conn->error);
+    }
+} else {
+    $history_result = false; // Set to false if table doesn't exist
+}
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +64,8 @@ $history_result = $history_stmt->get_result();
     
     <main class="dashboard-container">
         <section class="profile-section">
-            <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
+            <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" 
+                 alt="Profile Picture" class="profile-picture">
             <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
             <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
             <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
@@ -54,7 +73,7 @@ $history_result = $history_stmt->get_result();
         
         <section class="history-section">
             <h2>Shopping History</h2>
-            <?php if ($history_result->num_rows > 0): ?>
+            <?php if ($history_result && $history_result->num_rows > 0): ?>
                 <table>
                     <tr>
                         <th>Order ID</th>
