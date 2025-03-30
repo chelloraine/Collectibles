@@ -23,7 +23,7 @@ if ($stmt) {
 $address_result = false;
 $table_check = $conn->query("SHOW TABLES LIKE 'addresses'");
 if ($table_check && $table_check->num_rows > 0) {
-    $address_stmt = $conn->prepare("SELECT id, address, city, state, zip, is_default FROM addresses WHERE user_id = ?");
+    $address_stmt = $conn->prepare("SELECT id, address, city, state, zip FROM addresses WHERE user_id = ?");
     if ($address_stmt) {
         $address_stmt->bind_param("i", $user_id);
         $address_stmt->execute();
@@ -44,6 +44,18 @@ $conn->close();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <header>
+        <nav class="top-nav">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Categories</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">Cart</a></li>
+                <li><a href="userprofile.php">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+    
     <main class="dashboard-container">
         <section class="profile-section">
             <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
@@ -62,12 +74,13 @@ $conn->close();
                 <?php if ($address_result && $address_result->num_rows > 0): ?>
                     <ul>
                         <?php while ($address = $address_result->fetch_assoc()): ?>
-                            <li class="address-item <?php echo $address['is_default'] ? 'default-address' : ''; ?>" data-id="<?php echo $address['id']; ?>">
+                            <li class="address-item">
+                                <strong>Name:</strong> <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?><br>
+                                <strong>Contact:</strong> <?php echo htmlspecialchars($user['contact']); ?><br>
                                 <strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?><br>
                                 <strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?><br>
                                 <strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?><br>
-                                <strong>ZIP Code:</strong> <?php echo htmlspecialchars($address['zip']); ?><br>
-                                <button class="set-default-btn" data-id="<?php echo $address['id']; ?>">Set as Default</button>
+                                <strong>ZIP Code:</strong> <?php echo htmlspecialchars($address['zip']); ?>
                             </li>
                         <?php endwhile; ?>
                     </ul>
@@ -77,6 +90,26 @@ $conn->close();
             </div>
         </section>
     </main>
+
+    <footer>
+        <p>&copy; <?php echo date("Y"); ?> Your Website. All rights reserved.</p>
+    </footer>
+
+    <!-- Address Input Modal -->
+    <div id="address-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Address</h2>
+            <form id="address-form">
+                <input type="text" name="address" placeholder="Enter Address" required>
+                <input type="text" name="city" placeholder="City" required>
+                <input type="text" name="state" placeholder="State" required>
+                <input type="text" name="zip" placeholder="ZIP Code" required>
+                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                <button type="submit" class="profile-btn">Save Address</button>
+            </form>
+        </div>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -88,23 +121,77 @@ $conn->close();
                 $("#address-modal").fadeIn();
             });
 
-            $(".set-default-btn").click(function() {
-                let addressId = $(this).data("id");
-                $.post("set_default_address.php", { address_id: addressId }, function(response) {
-                    if (response.success) {
-                        location.reload();
-                    } else {
-                        alert("Failed to set default address.");
-                    }
-                }, "json");
+            $(".close").click(function() {
+                $("#address-modal").fadeOut();
             });
         });
     </script>
 
     <style>
-        .default-address {
-            background: #d3f9d8;
-            border: 2px solid #28a745;
+        .dashboard-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .profile-section {
+            width: 40%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .address-panel {
+            display: none;
+            width: 50%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 40%;
+            position: relative;
+            margin: auto;
+        }
+
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+            font-size: 20px;
         }
     </style>
 </body>
