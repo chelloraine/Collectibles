@@ -1,24 +1,36 @@
 <?php
+session_start();
 include_once("../connection.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user_id = $_POST['user_id'];
-    $address = $_POST['address'];
-    $city = $_POST['city'];
-    $state = $_POST['state'];
-    $zip = $_POST['zip'];
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(["success" => false, "message" => "Unauthorized"]);
+    exit;
+}
 
-    $stmt = $conn->prepare("INSERT INTO addresses (user_id, address, city, state, zip) VALUES (?, ?, ?, ?, ?)");
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_id = $_SESSION['user_id'];
+    $address = trim($_POST['address']);
+    $city = trim($_POST['city']);
+    $state = trim($_POST['state']);
+    $zip = trim($_POST['zip']);
+
+    // Check if this is the first address (set as default)
+    $result = $conn->query("SELECT COUNT(*) as count FROM addresses WHERE user_id = $user_id");
+    $row = $result->fetch_assoc();
+    $is_default = ($row['count'] == 0) ? 1 : 0;
+
+    // Insert new address
+    $stmt = $conn->prepare("INSERT INTO addresses (user_id, address, city, state, zip, is_default) VALUES (?, ?, ?, ?, ?, ?)");
     if ($stmt) {
-        $stmt->bind_param("issss", $user_id, $address, $city, $state, $zip);
+        $stmt->bind_param("issssi", $user_id, $address, $city, $state, $zip, $is_default);
         if ($stmt->execute()) {
-            echo "Address saved successfully!";
+            echo json_encode(["success" => true, "message" => "Address saved successfully!"]);
         } else {
-            echo "Error saving address: " . $conn->error;
+            echo json_encode(["success" => false, "message" => "Error saving address: " . $conn->error]);
         }
         $stmt->close();
     } else {
-        echo "Database error: " . $conn->error;
+        echo json_encode(["success" => false, "message" => "Database error: " . $conn->error]);
     }
 
     $conn->close();
