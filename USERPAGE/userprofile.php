@@ -19,11 +19,11 @@ if ($stmt) {
     $stmt->close();
 }
 
-// Fetch user addresses
+// Fetch user addresses with `is_default`
 $address_result = false;
 $table_check = $conn->query("SHOW TABLES LIKE 'addresses'");
 if ($table_check && $table_check->num_rows > 0) {
-    $address_stmt = $conn->prepare("SELECT id, address, city, state, zip FROM addresses WHERE user_id = ?");
+    $address_stmt = $conn->prepare("SELECT id, address, city, state, zip, is_default FROM addresses WHERE user_id = ?");
     if ($address_stmt) {
         $address_stmt->bind_param("i", $user_id);
         $address_stmt->execute();
@@ -70,24 +70,31 @@ $conn->close();
                 <h2>My Addresses</h2>
                 <button id="add-address-btn" class="profile-btn">Add New Address</button>
             </div>
-            <div id="address-list">
-                <?php if ($address_result && $address_result->num_rows > 0): ?>
-                    <ul>
-                        <?php while ($address = $address_result->fetch_assoc()): ?>
-                            <li class="address-item">
-                                <strong>Name:</strong> <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?><br>
-                                <strong>Contact:</strong> <?php echo htmlspecialchars($user['contact']); ?><br>
-                                <strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?><br>
-                                <strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?><br>
-                                <strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?><br>
-                                <strong>ZIP Code:</strong> <?php echo htmlspecialchars($address['zip']); ?>
-                            </li>
-                        <?php endwhile; ?>
-                    </ul>
-                <?php else: ?>
-                    <p>You currently don't have any saved addresses.</p>
-                <?php endif; ?>
-            </div>
+           <div id="address-list">
+    <?php if ($address_result && $address_result->num_rows > 0): ?>
+        <ul>
+            <?php while ($address = $address_result->fetch_assoc()): ?>
+                <li class="address-item">
+                    <strong>Name:</strong> <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?><br>
+                    <strong>Contact:</strong> <?php echo htmlspecialchars($user['contact']); ?><br>
+                    <strong>Address:</strong> <?php echo htmlspecialchars($address['address']); ?><br>
+                    <strong>City:</strong> <?php echo htmlspecialchars($address['city']); ?><br>
+                    <strong>State:</strong> <?php echo htmlspecialchars($address['state']); ?><br>
+                    <strong>ZIP Code:</strong> <?php echo htmlspecialchars($address['zip']); ?><br>
+                    
+                    <label>
+                        <input type="radio" name="default_address" class="default-address-radio" 
+                            data-address-id="<?php echo $address['id']; ?>" 
+                            <?php echo ($address['is_default'] == 1) ? "checked" : ""; ?>>
+                        Set as Default
+                    </label>
+                </li>
+            <?php endwhile; ?>
+        </ul>
+    <?php else: ?>
+        <p>You currently don't have any saved addresses.</p>
+    <?php endif; ?>
+</div>
         </section>
     </main>
 
@@ -127,7 +134,7 @@ $(document).ready(function() {
 
     // Handle form submission via AJAX
     $("#address-form").submit(function(e) {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
         
         $.ajax({
             type: "POST",
@@ -135,11 +142,9 @@ $(document).ready(function() {
             data: $(this).serialize(),
             dataType: "json",
             success: function(response) {
+                alert(response.message);
                 if (response.status === "success") {
-                    alert(response.message);
                     location.reload(); // Reload page to show the new address
-                } else {
-                    alert(response.message);
                 }
             },
             error: function() {
@@ -147,9 +152,29 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Set default address via AJAX
+    $(".default-address-radio").change(function() {
+        var addressId = $(this).data("address-id");
+
+        $.ajax({
+            type: "POST",
+            url: "set_default_address.php",
+            data: { address_id: addressId },
+            dataType: "json",
+            success: function(response) {
+                alert(response.message);
+                if (response.status === "success") {
+                    location.reload();
+                }
+            },
+            error: function() {
+                alert("Failed to update default address.");
+            }
+        });
+    });
 });
 </script>
-
 
     <style>
         .dashboard-container {
@@ -186,36 +211,6 @@ $(document).ready(function() {
             border: none;
             cursor: pointer;
             border-radius: 5px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 40%;
-            position: relative;
-            margin: auto;
-        }
-
-        .close {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            cursor: pointer;
-            font-size: 20px;
         }
     </style>
 </body>
