@@ -38,7 +38,7 @@ if ($result->num_rows === 1) {
                 <li><a href="#">Categories</a></li>
                 <li><a href="#">Notifications</a></li>
                 <li><a href="#">Cart</a></li>
-                <li><a href="#">Profile</a></li>
+                <li><a href="userprofile.php">Profile</a></li>
             </ul>
         </nav>
     </header>
