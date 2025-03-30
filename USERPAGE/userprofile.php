@@ -63,13 +63,19 @@ $conn->close();
     </header>
     
     <main class="dashboard-container">
-        <section class="profile-section">
-            <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" 
-                 alt="Profile Picture" class="profile-picture">
-            <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-            <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
-            <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
-        </section>
+    <section class="profile-section">
+    <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
+        <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
+        <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
+        <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
+
+        <!-- Buttons for Edit Profile & Account Settings -->
+    <div class="profile-actions">
+        <a href="edit_profile.php" class="profile-btn">Edit Profile</a>
+        <a href="account_settings.php" class="profile-btn">Account Settings</a>
+    </div>
+    </section>
+
         
         <section class="history-section">
             <h2>Shopping History</h2>
