@@ -86,6 +86,16 @@ if (isset($_POST['change_password'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
     <link rel="stylesheet" href="users.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Toggle visibility of account settings when the link is clicked
+            $("#account-settings-link").click(function(event) {
+                event.preventDefault(); // Prevent the default link behavior
+                $("#account-settings").toggle(); // Toggle visibility of account settings
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -106,7 +116,7 @@ if (isset($_POST['change_password'])) {
         <li><a href="#">My Orders</a></li>
         <li><a href="#">Wishlist</a></li>
         <li><a href="#">Messages</a></li>
-        <li><a href="#Account-settings">Account Settings</a></li>
+        <li><a href="#" id="account-settings-link">Account Settings</a></li>
     </ul>
 </aside>
 
@@ -121,7 +131,7 @@ if (isset($_POST['change_password'])) {
         <p style="color: red;"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></p>
     <?php endif; ?>
 
-    <div class="account-settings">
+    <div class="account-settings" id="account-settings" style="display: none;">
         <img src="<?php echo !empty($user['profile_picture']) ? '../uploads/' . htmlspecialchars($user['profile_picture']) : '../uploads/default.png'; ?>" alt="Profile Picture" class="profile-picture">
         <form method="POST" enctype="multipart/form-data">
             <input type="file" name="profile_picture" accept="image/*">
@@ -147,9 +157,7 @@ if (isset($_POST['change_password'])) {
 
             <button type="submit" name="update_profile">Update Profile</button>
         </form>
-    </div>
-
-    <section class="password-section">
+        <section class="password-section">
         <h3>Change Password</h3>
         <form method="POST">
             <label>Current Password:</label>
@@ -161,6 +169,9 @@ if (isset($_POST['change_password'])) {
             <button type="submit" name="change_password">Change Password</button>
         </form>
     </section>
+    </div>
+
+   
 </main>
 
 <footer>
