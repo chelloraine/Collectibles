@@ -21,20 +21,34 @@
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required placeholder="Enter your username" autocomplete="off">
 
-            <label for="password">Password:</label>
-        <div style="position: relative;">
-        <input type="password" id="password" name="password" style="padding-right: 30px;">
-         <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-        👁️
-        </span>
-    </div>
+           <!-- Include Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<label for="password">Password:</label>
+<div style="position: relative;">
+    <input type="password" id="password" name="password" style="padding-right: 40px;">
+    <i class="fa-solid fa-eye" id="togglePassword" 
+       style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+    </i>
+</div>
 
 <script>
-    function togglePassword() {
+    document.getElementById("togglePassword").addEventListener("click", function() {
         let passwordField = document.getElementById("password");
-        passwordField.type = (passwordField.type === "password") ? "text" : "password";
-    }
+        let icon = this;
+        
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash"); // Change to eye slash
+        } else {
+            passwordField.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye"); // Change back to eye
+        }
+    });
 </script>
+
 
             <button type="submit">Login</button>
         </form>
