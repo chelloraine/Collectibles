@@ -17,7 +17,22 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
 
+$products = [
+    'Hoodies' => 'hoodies.php',
+    'T-Shirts' => 'tshirts.php',
+    'Sweatpants' => 'sweatpants.php',
+    'Hats' => 'hats.php'
+];
 
+//array for images
+$featured_items = [
+    ['image' => 'hololive friends to go - Nekomata Okayu Keychain.jpg', 'title' => 'Hololive', 'category' => 'HAORI'],
+    ['image' => 'hololive friends to go - Ookami Mio Keychain.jpg', 'title' => 'VShojo', 'category' => 'COLLECTION'],
+    ['image' => 'hololive friends with u - Inugami Korone Street Outfit, Front.jpg', 'title' => 'Nijisanji', 'category' => 'HAORI'],
+    ['image' => 'hololive friends with u - Ookami Mio.jpg', 'title' => 'Indie Vtuber', 'category' => 'MERCH DROP'],
+    ['image' => 'hololive friends with u - Robocosan.jpg', 'title' => 'Creator 5', 'category' => 'SPECIAL EDITION'],
+    ['image' => 'hololive friends with u - Sakura Miko.jpg', 'title' => 'Creator 6', 'category' => 'LIMITED EDITION']
+];
 
 // Handle Profile Update
 if (isset($_POST['update_profile'])) {
