@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../connection.php';
+include 'db_connect.php';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -26,22 +26,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (empty($error_message)) {
-        // Hash password for security
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        // Check if the contact number already exists in the database
+        $stmt_check_contact = $conn->prepare("SELECT * FROM Customers WHERE Contact_Number = ?");
+        $stmt_check_contact->bind_param("s", $contact);
+        $stmt_check_contact->execute();
+        $result = $stmt_check_contact->get_result();
 
-        // Prepare SQL to insert the new user into the database
-        $stmt = $conn->prepare("INSERT INTO Customers (First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth, Password) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssss", $first_name, $last_name, $username, $email, $contact, $birthday, $hashed_password);
-
-        if ($stmt->execute()) {
-            // Redirect to login page after successful signup
-            header("Location: login.php");
-            exit;
+        if ($result->num_rows > 0) {
+            $error_message = "This contact number is already registered. Please use a different contact number.";
         } else {
-            $error_message = "Error: " . $stmt->error;
+            // Hash password for security
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Prepare SQL to insert the new user into the database
+            $stmt = $conn->prepare("INSERT INTO Customers (First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth, Password) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssss", $first_name, $last_name, $username, $email, $contact, $birthday, $hashed_password);
+
+            if ($stmt->execute()) {
+                // Redirect to login page after successful signup
+                header("Location: login.php");
+                exit;
+            } else {
+                $error_message = "Error: " . $stmt->error;
+            }
+            $stmt->close();
         }
-        $stmt->close();
+
+        $stmt_check_contact->close();
     }
+
     // Close the connection
     $conn->close();
 }
@@ -53,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Oshi Haven</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sign.css">
     <script defer src="script.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Passero One' rel='stylesheet'>
     <style>
@@ -104,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </form>
 
     <div class="links">
-        <p>Already have an account? <a href="login.php">Login here</a></p>
+        <p>Already have an account? <a href="loginpage.php">Login here</a></p>
     </div>
 </div>
 
