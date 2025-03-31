@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Oshi Haven</title>
-    <link rel="stylesheet" href="sign.css">
+    <link rel="stylesheet" href="signup.css">
     <script defer src="script.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Passero One' rel='stylesheet'>
     <style>
