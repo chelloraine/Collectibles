@@ -1,12 +1,10 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+session_start();
+include '../connection.php';
 
-include '../connection.php'; 
- // Ensure you have a database connection file
-
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect and sanitize input
+    // Collect and sanitize user input
     $first_name = htmlspecialchars(trim($_POST['first_name']));
     $last_name = htmlspecialchars(trim($_POST['last_name']));
     $username = htmlspecialchars(trim($_POST['username']));
@@ -16,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Error Handling
+    // Error handling
     $error_message = "";
 
     if (empty($first_name) || empty($last_name) || empty($username) || empty($email) || empty($contact) || empty($birthday) || empty($password) || empty($confirm_password)) {
@@ -25,46 +23,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error_message = "Invalid email format.";
     } elseif ($password !== $confirm_password) {
         $error_message = "Passwords do not match.";
-    } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password)) {
-        $error_message = "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.";
-    }
-
-    // Validate age (Minimum 16 years old)
-    $birthdate = DateTime::createFromFormat('Y-m-d', $birthday);
-    $today = new DateTime();
-    $age = $today->diff($birthdate)->y;
-
-    if (!$birthdate || $age < 16) {
-        $error_message = "You must be at least 16 years old to register.";
     }
 
     if (empty($error_message)) {
-        // Hash the password
+        // Hash password for security
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        // Check if username or email already exists
-        $check_stmt = $conn->prepare("SELECT Customer_ID FROM Customers WHERE Username = ? OR Customer_Email = ?");
-        $check_stmt->bind_param("ss", $username, $email);
-        $check_stmt->execute();
-        $check_stmt->store_result();
+        // Prepare SQL to insert the new user into the database
+        $stmt = $conn->prepare("INSERT INTO Customers (First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth, Password) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssss", $first_name, $last_name, $username, $email, $contact, $birthday, $hashed_password);
 
-        if ($check_stmt->num_rows > 0) {
-            $error_message = "Username or Email already taken.";
+        if ($stmt->execute()) {
+            // Redirect to login page after successful signup
+            header("Location: login.php");
+            exit;
         } else {
-            // Insert new customer
-            $stmt = $conn->prepare("INSERT INTO Customers (First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth, Password) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssss", $first_name, $last_name, $username, $email, $contact, $birthday, $hashed_password);
-
-            if ($stmt->execute()) {
-                header("Location: login_page.php"); // Redirect to login after successful signup
-                exit;
-            } else {
-                $error_message = "Error: " . $stmt->error;
-            }
-            $stmt->close();
+            $error_message = "Error: " . $stmt->error;
         }
-        $check_stmt->close();
+        $stmt->close();
     }
+    // Close the connection
     $conn->close();
 }
 ?>
@@ -74,46 +52,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="signup.css">
+    <title>Sign Up - Oshi Haven</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Passero One' rel='stylesheet'>
+    <style>
+        /* Include your CSS styling here from previous responses */
+    </style>
 </head>
 <body>
-    <div class="signup-container">
-        <h2>Sign Up</h2>
 
-        <?php if (!empty($error_message)) : ?>
-            <p style="color: red;"><?php echo $error_message; ?></p>
-        <?php endif; ?>
+<header>
+    <img src="logo.png" alt="Logo" class="logo">
+    <h1>Oshi Haven</h1>
+</header>
 
-        <form action="signup.php" method="POST">
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name">
+<div class="signup-container">
+    <h2>Create an Account</h2>
 
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" required placeholder="Enter your last name">
+    <!-- Error Message -->
+    <?php if (!empty($error_message)): ?>
+        <p class="error-message"><?php echo $error_message; ?></p>
+    <?php endif; ?>
 
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required placeholder="Choose a username">
+    <form action="signup.php" method="POST">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name" required>
 
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" required placeholder="Enter your email">
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name" required>
 
-            <label for="contact">Contact Number</label>
-            <input type="tel" id="contact" name="contact" required placeholder="Enter your contact number">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
 
-            <label for="birthday">Birthday</label>
-            <input type="date" id="birthday" name="birthday" required>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required placeholder="Choose a password">
+        <label for="contact">Contact Number</label>
+        <input type="tel" id="contact" name="contact" required>
 
-            <label for="confirm_password">Confirm Password</label>
-            <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
+        <label for="birthday">Birthday</label>
+        <input type="date" id="birthday" name="birthday" required>
 
-            <button type="submit">Create Account</button>
-        </form>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
 
-        <p>Already have an account? <a href="login_page.php">Login</a></p>
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="links">
+        <p>Already have an account? <a href="login.php">Login here</a></p>
     </div>
+</div>
+
 </body>
 </html>
