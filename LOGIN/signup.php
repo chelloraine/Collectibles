@@ -2,7 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include 'db_connect.php'; // Ensure you have a database connection file
+include '../connection.php'; 
+ // Ensure you have a database connection file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Collect and sanitize input
@@ -74,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="signup.css">
 </head>
 <body>
     <div class="signup-container">
