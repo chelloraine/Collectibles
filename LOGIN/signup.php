@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db_connect.php';
+include '../connection.php'; 
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -76,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
 <header>
-    <img src="logo.png" alt="Logo" class="logo">
-    <h1>Oshi Haven</h1>
+  <!-- <img src="" alt="Logo" class="logo"> -->
+    <!--<h1>Oshi Haven</h1>-->
 </header>
 
 <div class="signup-container">
