@@ -9,12 +9,10 @@ include "../connection.php";
 // exit;
 
 // Check if user is logged in
-if (empty($_SESSION['customer_id'])) { 
-    die("Session customer_id is not set!");  // Debugging
-    header("Location: loginpage.php");
+if (!isset($_SESSION['customer_id'])) {
+    header("Location: loginpage.php"); // Redirect to login if not logged in
     exit;
 }
-
 
 // Get the customer's data
 $customer_id = $_SESSION['Customer_ID'];
@@ -90,8 +88,12 @@ $conn->close();
     <div class="profile-container">
         <h2>Update Your Profile</h2>
 
-        <?php if (!empty($error_message)): ?>
-            <p class="error-message"><?php echo $error_message; ?></p>
+        <?php if (empty($_SESSION['customer_id'])) { 
+    die("Session customer_id is not set!");  // Debugging
+    header("Location: loginpage.php");
+    exit;
+}
+
         <?php endif; ?>
 
         <?php if (!empty($success_message)): ?>

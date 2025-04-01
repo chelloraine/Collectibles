@@ -15,6 +15,7 @@ if (empty($_SESSION['customer_id'])) {
     exit;
 }
 
+}
 
 // Get the customer's data
 $customer_id = $_SESSION['Customer_ID'];
