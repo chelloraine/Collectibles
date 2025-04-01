@@ -2,11 +2,12 @@
 session_start();
 
 // Redirect logged-in users to userpage.php
-if (isset($_SESSION['Customer_id'])) {
+if (isset($_SESSION['Customer_id'])) { // Use 'Customer_id' here, not 'user_id'
     header("Location: ../USERPAGE/userpage.php");
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,11 +24,12 @@ if (isset($_SESSION['Customer_id'])) {
 
         <!-- Display Error Message if Exists -->
         <?php if (!empty($_SESSION['error'])): ?>
-            <p class="error-message" style="color:red;">
-                <?php echo htmlspecialchars($_SESSION['error']); ?>
-            </p>
-            <?php unset($_SESSION['error']); // Remove error after displaying ?>
-        <?php endif; ?>
+    <p class="error-message" style="color:red;">
+        <?php echo htmlspecialchars($_SESSION['error']); ?>
+    </p>
+    <?php unset($_SESSION['error']); // Remove error after displaying ?>
+<?php endif; ?>
+
 
         <form action="login.php" method="POST">
             <label for="username">Username</label>
