@@ -1,0 +1,90 @@
+/* Reset some basic elements */
+body, h1, h2, p, ul {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Top Navigation Bar */
+.top-nav {
+    background-color: #ff5722;
+    color: white;
+    padding: 10px 0;
+}
+
+.top-nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+.top-nav a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 15px;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.sidebar ul {
+    list-style-type: none;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 10px 0;
+}
+
+/* Main Content Area */
+main {
+    margin-left: 220px;
+    padding: 20px;
+    flex: 1;
+}
+
+.dashboard-widgets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.widget {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    flex: 1 1 calc(33.333% - 40px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #222;
+    color: white;
+    margin-top: auto;
+}
+
+.logo {
+    width: 80px;  /* Increased from 50px */
+    height: 80px; /* Increased from 50px */
+    margin-right: 15px;
+}

@@ -21,8 +21,10 @@ CREATE TABLE Customers (
     Username VARCHAR(50) UNIQUE NOT NULL,
     Password VARCHAR(255) NOT NULL
 );
+DROP TABLE Customers;
 SELECT * FROM Customers;
-
+SELECT * FROM Customers WHERE Username = 'chelleganda';
+TRUNCATE TABLE Customers;
 -- Customer Addresses (Multiple Addresses with Default Option)
 CREATE TABLE Customer_Addresses (
     Address_ID INT(11) AUTO_INCREMENT PRIMARY KEY,
