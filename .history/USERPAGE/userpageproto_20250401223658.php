@@ -60,7 +60,8 @@ $featured_items = [
             <div class="icons"> 
                 <div class="icon"><a href="..\USERPAGE\profile.php"></a></div> 
                 <div class="icon"><a href="cart.php"></a></div>
-                <div class="icon"><a href="/website/USERPAGE/profile.php">Profile</a></div>
+                <div class="icon"><a href="/website/USERPAGE/profile.php">Profile</a>
+                </a></div>
             </div>
         </div>
     </header>
