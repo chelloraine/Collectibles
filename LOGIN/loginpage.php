@@ -1,4 +1,12 @@
-<?php session_start(); ?>
+<?php 
+session_start();
+
+// Redirect logged-in users to userpage.php
+if (isset($_SESSION['Customer_id'])) {
+    header("Location: ../USERPAGE/userpage.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +22,7 @@
         <h2>Login</h2>
 
         <!-- Display Error Message if Exists -->
-        <?php if (isset($_SESSION['error'])): ?>
+        <?php if (!empty($_SESSION['error'])): ?>
             <p class="error-message" style="color:red;">
                 <?php echo htmlspecialchars($_SESSION['error']); ?>
             </p>
@@ -27,7 +35,7 @@
 
             <label for="password">Password:</label>
             <div style="position: relative;">
-                <input type="password" id="password" name="password" required style="padding-right: 40px;">
+                <input type="password" id="password" name="password" required autocomplete="off" style="padding-right: 40px;">
                 <i class="fa-solid fa-eye" id="togglePassword" 
                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
                 </i>
@@ -47,12 +55,10 @@
 
             if (passwordField.type === "password") {
                 passwordField.type = "text";
-                icon.classList.remove("fa-eye");
-                icon.classList.add("fa-eye-slash"); // Change to eye slash
+                icon.classList.replace("fa-eye", "fa-eye-slash"); // Change to eye slash
             } else {
                 passwordField.type = "password";
-                icon.classList.remove("fa-eye-slash");
-                icon.classList.add("fa-eye"); // Change back to eye
+                icon.classList.replace("fa-eye-slash", "fa-eye"); // Change back to eye
             }
         });
     </script>
