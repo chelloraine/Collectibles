@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Redirect back to login page if login fails
-header("Location: website/USERPAGE/userpage.php");
+header("Location: ../USERPAGE/userpage.php");
 
 exit;
 ?>
