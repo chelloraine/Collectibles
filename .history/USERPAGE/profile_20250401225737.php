@@ -1,5 +1,5 @@
 <?php
-ini_set('session.gc_maxlifetime', 3600); // Keep session active for 1 hour
+
 session_start();
 session_regenerate_id(true);  // Regenerate session to avoid session fixation
 include "../connection.php";
