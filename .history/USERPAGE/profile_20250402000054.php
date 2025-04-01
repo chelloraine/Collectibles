@@ -24,9 +24,6 @@ $user_id = $_SESSION['customer_id'];
 
 // Function to fetch user data
 function getUserData($conn, $user_id) {
-    // Declare the variables outside of bind_result
-    $first_name = $last_name = $username = $email = $contact = $birthday = null;
-
     // Prepare the SQL query to select user data
     $stmt = $conn->prepare("SELECT First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth FROM Customers WHERE Customer_ID = ?");
     $stmt->bind_param("i", $user_id); // Bind the user ID
@@ -42,8 +39,7 @@ function getUserData($conn, $user_id) {
     } else {
         return null; // Return null if no data found
     }
-    $stmt->close();
-}
+
 
 // Get initial user data
 $user_data = getUserData($conn, $user_id);
@@ -103,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($update_stmt->execute()) {
             $success_message = "Profile updated successfully.";
             
-            // 🔄 REFRESH user data after successful update
+            // 🔄 REFRESH user data
             $user_data = getUserData($conn, $user_id);
         } else {
             $error_message = "Error updating profile: " . $update_stmt->error;

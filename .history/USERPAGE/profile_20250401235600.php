@@ -7,10 +7,10 @@ if (!isset($_SESSION['customer_id'])) {
 }
 
 // Database connection
-$host = "127.0.0.1";
-$user = "root";
-$password = "";
-$database = "userlist_db";
+$host = "127.0.0.1"; // Change if using a remote DB
+$user = "root"; 
+$password = ""; 
+$database = "userlist_db"; 
 
 $conn = new mysqli($host, $user, $password, $database);
 
@@ -19,34 +19,15 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get user ID from session
+// Fetch user data
 $user_id = $_SESSION['customer_id'];
 
-// Function to fetch user data
-function getUserData($conn, $user_id) {
-    // Declare the variables outside of bind_result
-    $first_name = $last_name = $username = $email = $contact = $birthday = null;
-
-    // Prepare the SQL query to select user data
-    $stmt = $conn->prepare("SELECT First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth FROM Customers WHERE Customer_ID = ?");
-    $stmt->bind_param("i", $user_id); // Bind the user ID
-    $stmt->execute(); // Execute the query
-    
-    // Bind the result columns to PHP variables
-    $stmt->bind_result($first_name, $last_name, $username, $email, $contact, $birthday);
-    
-    // Fetch the data into the variables
-    if ($stmt->fetch()) {
-        // Return the data as an associative array
-        return compact('first_name', 'last_name', 'username', 'email', 'contact', 'birthday');
-    } else {
-        return null; // Return null if no data found
-    }
-    $stmt->close();
-}
-
-// Get initial user data
-$user_data = getUserData($conn, $user_id);
+$stmt = $conn->prepare("SELECT First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth FROM Customers WHERE Customer_ID = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($first_name, $last_name, $username, $email, $contact, $birthday);
+$stmt->fetch();
+$stmt->close();
 
 $error_message = "";
 $success_message = "";
@@ -60,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $contact = htmlspecialchars(trim($_POST['contact']));
     $birthday = $_POST['birthday'];
 
-    // Validate inputs
+    // Validate input fields
     if (empty($first_name) || empty($last_name) || empty($new_username) || empty($email) || empty($contact) || empty($birthday)) {
         $error_message = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -71,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error_message = "Username must be at least 4 characters long.";
     }
 
-    // Check duplicate email
+    // Check for duplicate email
     if (empty($error_message)) {
         $email_check = $conn->prepare("SELECT Customer_ID FROM Customers WHERE Customer_Email = ? AND Customer_ID != ?");
         $email_check->bind_param("si", $email, $user_id);
@@ -83,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email_check->close();
     }
 
-    // Check duplicate username
+    // Check for duplicate username
     if (empty($error_message)) {
         $username_check = $conn->prepare("SELECT Customer_ID FROM Customers WHERE Username = ? AND Customer_ID != ?");
         $username_check->bind_param("si", $new_username, $user_id);
@@ -96,15 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (empty($error_message)) {
-        // Update user data in Customers table
+        // Update user profile
         $update_stmt = $conn->prepare("UPDATE Customers SET First_Name = ?, Last_Name = ?, Username = ?, Customer_Email = ?, Contact_Number = ?, Date_Of_Birth = ? WHERE Customer_ID = ?");
         $update_stmt->bind_param("ssssssi", $first_name, $last_name, $new_username, $email, $contact, $birthday, $user_id);
 
         if ($update_stmt->execute()) {
             $success_message = "Profile updated successfully.";
-            
-            // 🔄 REFRESH user data after successful update
-            $user_data = getUserData($conn, $user_id);
         } else {
             $error_message = "Error updating profile: " . $update_stmt->error;
         }
@@ -114,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

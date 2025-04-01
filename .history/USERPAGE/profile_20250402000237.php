@@ -24,9 +24,6 @@ $user_id = $_SESSION['customer_id'];
 
 // Function to fetch user data
 function getUserData($conn, $user_id) {
-    // Declare the variables outside of bind_result
-    $first_name = $last_name = $username = $email = $contact = $birthday = null;
-
     // Prepare the SQL query to select user data
     $stmt = $conn->prepare("SELECT First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth FROM Customers WHERE Customer_ID = ?");
     $stmt->bind_param("i", $user_id); // Bind the user ID
@@ -114,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
