@@ -21,6 +21,7 @@ CREATE TABLE Customers (
     Username VARCHAR(50) UNIQUE NOT NULL,
     Password VARCHAR(255) NOT NULL
 );
+SELECT * FROM Customers;
 
 -- Customer Addresses (Multiple Addresses with Default Option)
 CREATE TABLE Customer_Addresses (
