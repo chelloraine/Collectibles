@@ -1,5 +1,6 @@
 <?php 
 session_start();
+include '../connection.php'; 
 
 // Redirect logged-in users to userpage.php
 if (isset($_SESSION['Customer_id'])) { // Use 'Customer_id' here, not 'user_id'
