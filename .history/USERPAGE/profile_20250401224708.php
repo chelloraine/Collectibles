@@ -15,7 +15,7 @@ if (!isset($_SESSION['customer_id'])) {
 }
 
 // Get the customer's data
-$customer_id = $_SESSION['Customer_ID'];
+$customer_id = $_SESSION['custoCustomemer_id'];
 
 $stmt = $conn->prepare("SELECT First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth FROM Customers WHERE Customer_ID = ?");
 $stmt->bind_param("i", $customer_id);
