@@ -29,8 +29,8 @@ if (isset($_SESSION['Customer_id'])) {
             <?php unset($_SESSION['error']); // Remove error after displaying ?>
         <?php endif; ?>
 
-        <form action="../login.php" method="POST">
-        <label for="username">Username</label>
+        <form action="login.php" method="POST">
+            <label for="username">Username</label>
             <input type="text" id="username" name="username" required placeholder="Enter your username" autocomplete="off">
 
             <label for="password">Password:</label>
