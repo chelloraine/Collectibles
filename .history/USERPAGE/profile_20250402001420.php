@@ -285,10 +285,6 @@ button:hover {
     <button type="submit">Update Profile</button>
 </form>
 
-<div class="links">
-    <p><a href="change_password.php">Change Password</a></p>
-</div>
-
 <?php if (!empty($success_message)): ?>
     <p class="success-message"><?php echo $success_message; ?></p>  <!-- Display success message -->
 <?php endif; ?>
@@ -296,6 +292,12 @@ button:hover {
 <?php if (!empty($error_message)): ?>
     <p class="error-message"><?php echo $error_message; ?></p>  <!-- Display error message -->
 <?php endif; ?>
+
+<div class="links">
+    <p><a href="change_password.php">Change Password</a></p>
+</div>
+
+</div>
     </section>
 </body>
 </html>

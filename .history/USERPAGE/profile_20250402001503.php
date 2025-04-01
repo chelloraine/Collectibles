@@ -289,13 +289,6 @@ button:hover {
     <p><a href="change_password.php">Change Password</a></p>
 </div>
 
-<?php if (!empty($success_message)): ?>
-    <p class="success-message"><?php echo $success_message; ?></p>  <!-- Display success message -->
-<?php endif; ?>
-
-<?php if (!empty($error_message)): ?>
-    <p class="error-message"><?php echo $error_message; ?></p>  <!-- Display error message -->
-<?php endif; ?>
     </section>
 </body>
 </html>
