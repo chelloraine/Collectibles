@@ -24,29 +24,33 @@ $user_id = $_SESSION['customer_id'];
 
 // Function to fetch user data
 function getUserData($conn, $user_id) {
-    // Declare the variables outside of bind_result
-    $first_name = $last_name = $username = $email = $contact = $birthday = null;
-
-    // Prepare the SQL query to select user data
     $stmt = $conn->prepare("SELECT First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth FROM Customers WHERE Customer_ID = ?");
-    $stmt->bind_param("i", $user_id); // Bind the user ID
-    $stmt->execute(); // Execute the query
-    
-    // Bind the result columns to PHP variables
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
     $stmt->bind_result($first_name, $last_name, $username, $email, $contact, $birthday);
-    
-    // Fetch the data into the variables
+
     if ($stmt->fetch()) {
-        // Return the data as an associative array
         return compact('first_name', 'last_name', 'username', 'email', 'contact', 'birthday');
     } else {
-        return null; // Return null if no data found
+        return null;
     }
     $stmt->close();
 }
 
 // Get initial user data
 $user_data = getUserData($conn, $user_id);
+
+// Ensure user data is not null to prevent undefined variable issues
+if ($user_data) {
+    $first_name = $user_data['first_name'];
+    $last_name = $user_data['last_name'];
+    $username = $user_data['username'];
+    $email = $user_data['email'];
+    $contact = $user_data['contact'];
+    $birthday = $user_data['birthday'];
+} else {
+    die("Error: User data not found.");
+}
 
 $error_message = "";
 $success_message = "";
@@ -102,8 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($update_stmt->execute()) {
             $success_message = "Profile updated successfully.";
-            
-            // 🔄 REFRESH user data after successful update
+            // Refresh user data after update
             $user_data = getUserData($conn, $user_id);
         } else {
             $error_message = "Error updating profile: " . $update_stmt->error;
@@ -114,6 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -265,38 +269,38 @@ button:hover {
     <h2>Update Your Profile</h2>
 
     <form action="profile.php" method="POST">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
 
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" required>
+    <label for="first_name">First Name</label>
+    <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" required>
 
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" required>
+    <label for="last_name">Last Name</label>
+    <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" required>
 
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
 
-            <label for="contact">Contact Number</label>
-            <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($contact); ?>" required>
+    <label for="contact">Contact Number</label>
+    <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($contact); ?>" required>
 
-            <label for="birthday">Birthday</label>
-            <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>" required>
+    <label for="birthday">Birthday</label>
+    <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>" required>
 
-            <button type="submit">Update Profile</button>
+    <button type="submit">Update Profile</button>
+</form>
 
-            <?php if (!empty($success_message)): ?>
-                <p class="success-message"><?php echo $success_message; ?></p>
-            <?php endif; ?>
-
-            <?php if (!empty($error_message)): ?>
-                <p class="error-message"><?php echo $error_message; ?></p>
-            <?php endif; ?>
-        </form>
-
-        <div class="links">
-            <p><a href="change_password.php">Change Password</a></p>
+<div class="links">
+    <p><a href="change_password.php">Change Password</a></p>
 </div>
+
+<?php if (!empty($success_message)): ?>
+    <p class="success-message"><?php echo $success_message; ?></p>  <!-- Display success message -->
+<?php endif; ?>
+
+<?php if (!empty($error_message)): ?>
+    <p class="error-message"><?php echo $error_message; ?></p>  <!-- Display error message -->
+<?php endif; ?>
     </section>
 </body>
 </html>

@@ -95,22 +95,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username_check->close();
     }
 
-    if (empty($error_message)) {
-        // Update user data in Customers table
-        $update_stmt = $conn->prepare("UPDATE Customers SET First_Name = ?, Last_Name = ?, Username = ?, Customer_Email = ?, Contact_Number = ?, Date_Of_Birth = ? WHERE Customer_ID = ?");
-        $update_stmt->bind_param("ssssssi", $first_name, $last_name, $new_username, $email, $contact, $birthday, $user_id);
+   if (empty($error_message)) {
+    // Update user data in Customers table
+    $update_stmt = $conn->prepare("UPDATE Customers SET First_Name = ?, Last_Name = ?, Username = ?, Customer_Email = ?, Contact_Number = ?, Date_Of_Birth = ? WHERE Customer_ID = ?");
+    $update_stmt->bind_param("ssssssi", $first_name, $last_name, $new_username, $email, $contact, $birthday, $user_id);
 
-        if ($update_stmt->execute()) {
-            $success_message = "Profile updated successfully.";
-            
-            // 🔄 REFRESH user data after successful update
-            $user_data = getUserData($conn, $user_id);
-        } else {
-            $error_message = "Error updating profile: " . $update_stmt->error;
-        }
-        $update_stmt->close();
+    if ($update_stmt->execute()) {
+        $success_message = "Profile updated successfully.";  // Success message
+        // Refresh user data after successful update
+        $user_data = getUserData($conn, $user_id);
+    } else {
+        $error_message = "Error updating profile: " . $update_stmt->error;  // Error message
     }
+    $update_stmt->close();
 }
+
 
 $conn->close();
 ?>
@@ -265,34 +264,26 @@ button:hover {
     <h2>Update Your Profile</h2>
 
     <form action="profile.php" method="POST">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user_data['username']); ?>" required>
 
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" required>
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($user_data['first_name']); ?>" required>
 
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" required>
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user_data['last_name']); ?>" required>
 
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
 
-            <label for="contact">Contact Number</label>
-            <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($contact); ?>" required>
+        <label for="contact">Contact Number</label>
+        <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($user_data['contact']); ?>" required>
 
-            <label for="birthday">Birthday</label>
-            <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>" required>
+        <label for="birthday">Birthday</label>
+        <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($user_data['birthday']); ?>" required>
 
-            <button type="submit">Update Profile</button>
-
-            <?php if (!empty($success_message)): ?>
-                <p class="success-message"><?php echo $success_message; ?></p>
-            <?php endif; ?>
-
-            <?php if (!empty($error_message)): ?>
-                <p class="error-message"><?php echo $error_message; ?></p>
-            <?php endif; ?>
-        </form>
+        <button type="submit">Update Profile</button>
+    </form>
 
         <div class="links">
             <p><a href="change_password.php">Change Password</a></p>
