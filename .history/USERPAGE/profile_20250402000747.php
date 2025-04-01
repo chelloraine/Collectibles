@@ -265,7 +265,7 @@ button:hover {
     <section class="featured-container">
     <h2>Update Your Profile</h2>
 
-    <form action="profile.php" method="POST">
+   <form action="profile.php" method="POST">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user_data['username']); ?>" required>
 
@@ -286,10 +286,5 @@ button:hover {
 
         <button type="submit">Update Profile</button>
     </form>
-
-        <div class="links">
-            <p><a href="change_password.php">Change Password</a></p>
-</div>
-    </section>
 </body>
 </html>

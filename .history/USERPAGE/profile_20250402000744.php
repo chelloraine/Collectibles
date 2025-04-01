@@ -286,10 +286,5 @@ button:hover {
 
         <button type="submit">Update Profile</button>
     </form>
-
-        <div class="links">
-            <p><a href="change_password.php">Change Password</a></p>
-</div>
-    </section>
 </body>
 </html>
