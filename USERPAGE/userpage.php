@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user details
-$stmt = $conn->prepare("SELECT first_name, last_name, email, username,contact, status, profile_picture, password FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT First_Name, Last_Name, Customer_Email, Username,Contact_Number, Password FROM Customers WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -19,10 +19,10 @@ $stmt->close();
 
 // Handle Profile Update
 if (isset($_POST['update_profile'])) {
-    $first_name = trim($_POST['first_name']);
-    $last_name = trim($_POST['last_name']);
-    $email = trim($_POST['email']);
-    $username = trim($_POST['username']);
+    $first_name = trim($_POST['First_Name']);
+    $last_name = trim($_POST['Last_Name']);
+    $email = trim($_POST['Customer_Email']);
+    $username = trim($_POST['Username']);
 
     $update_stmt = $conn->prepare("UPDATE users SET first_name=?, last_name=?, email=?, username=? WHERE id=?");
     $update_stmt->bind_param("ssssi", $first_name, $last_name, $email, $username, $user_id);
