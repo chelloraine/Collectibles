@@ -1,6 +1,8 @@
 <?php
 session_start();
-include '../connection.php'; 
+ob_start(); // Start output buffering
+
+include '../connection.php'; // Ensure connection.php properly initializes $conn
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
@@ -8,15 +10,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare and execute SQL query
     $stmt = $conn->prepare("SELECT Customer_ID, Username, Password FROM customers WHERE Username = ?");
+    if (!$stmt) {
+        die("Prepare failed: " . $conn->error); // Debugging
+    }
+
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
-        
-        // Verify password
-        if (password_verify($password, $row['Password'])) {  
+
+        // Debugging: Check stored password format
+        // echo "Stored Password: " . $row['Password']; exit;
+
+        // Ensure stored password is hashed before using password_verify()
+        if (password_verify($password, $row['Password'])) {
             $_SESSION['user_id'] = $row['Customer_ID'];
             $_SESSION['username'] = $row['Username'];
 
@@ -25,18 +34,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         } else {
             $_SESSION['error'] = "Invalid username or password!";
-            header("Location: loginpage.php");
-            exit;
         }
     } else {
         $_SESSION['error'] = "User not found!";
-        header("Location: loginpage.php");
-        exit;
     }
 
     $stmt->close();
+    $conn->close();
 }
 
-$conn->close();
-
+// Redirect back to login page if login fails
+header("Location: loginpage.php");
+exit;
 ?>
