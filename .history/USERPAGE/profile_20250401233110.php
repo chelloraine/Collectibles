@@ -82,7 +82,7 @@ $conn->close();
 </head>
 <body>
     <header>
-    <img src="../images/logo.png" alt="Logo" class="logo" style="width: 110px; height: 100px;">
+        <img src="logo.png" alt="Logo" class="logo">
         <h1>Oshi Haven</h1>
         <div class="nav-container">
             <nav>
@@ -114,7 +114,13 @@ $conn->close();
     </header>
     
     <section class="featured-container">
-       
+        <?php foreach ($featured_items as $item): ?>
+            <div class="featured-item">
+                <img src="<?php echo $item['image']; ?>" alt="<?php echo $item['title']; ?>">
+                <h3><?php echo $item['title']; ?></h3>
+                <p><?php echo $item['category']; ?></p>
+            </div>
+        <?php endforeach; ?>
     </section>
 </body>
 </html>

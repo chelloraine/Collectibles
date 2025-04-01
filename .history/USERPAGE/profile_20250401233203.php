@@ -114,7 +114,13 @@ $conn->close();
     </header>
     
     <section class="featured-container">
-       
+        <?php foreach ($featured_items as $item): ?>
+            <div class="featured-item">
+                <img src="<?php echo $item['image']; ?>" alt="<?php echo $item['title']; ?>">
+                <h3><?php echo $item['title']; ?></h3>
+                <p><?php echo $item['category']; ?></p>
+            </div>
+        <?php endforeach; ?>
     </section>
 </body>
 </html>
