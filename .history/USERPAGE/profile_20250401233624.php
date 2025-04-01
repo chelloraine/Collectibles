@@ -182,9 +182,6 @@ button:hover {
 .links a:hover {
     text-decoration: underline;
 }
-</style>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Passero+One&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <header>
