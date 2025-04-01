@@ -38,4 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
+header("Location: website/USERPAGE/userpage.php");
+exit;
+
 ?>
