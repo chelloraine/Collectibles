@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Admin found
         $row = $result->fetch_assoc();
         if (password_verify($password, $row['Admin_Password'])) {
-            $_SESSION['Admin_ID'] = $row['Admin_ID'];
+            $_SESSION['Admin_id'] = $row['Admin_ID'];
             $_SESSION['username'] = $row['Admin_Name'];
             $_SESSION['role'] = 'admin';
             $_SESSION['admin_logged_in'] = true;
