@@ -35,14 +35,6 @@ $stmt->bind_result($first_name, $last_name, $username, $email, $contact, $birthd
 $stmt->fetch();
 $stmt->close();
 
-
-if ($result->num_rows === 1) {
-    $user = $result->fetch_assoc();
-} else {
-    die("User not found in the database.");
-}
-
-
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $first_name = htmlspecialchars(trim($_POST['first_name']));
@@ -74,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$stmt->close();
-$conn->close();?>
+$conn->close();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
