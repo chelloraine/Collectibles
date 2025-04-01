@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Error handling
     $error_message = "";
 
+    // Validate form fields
     if (empty($first_name) || empty($last_name) || empty($username) || empty($email) || empty($contact) || empty($birthday) || empty($password) || empty($confirm_password)) {
         $error_message = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($stmt->execute()) {
                 // Redirect to login page after successful signup
-                header("Location: login.php");
+                header("Location: loginpage.php");
                 exit;
             } else {
                 $error_message = "Error: " . $stmt->error;
@@ -76,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
 <header>
-  <!-- <img src="" alt="Logo" class="logo"> -->
+    <!-- <img src="" alt="Logo" class="logo"> -->
     <!--<h1>Oshi Haven</h1>-->
 </header>
 
@@ -117,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </form>
 
     <div class="links">
-        <p>Already have an account? <a href="loginpage.php">Login here</a></p>
+        <p>Already have an account? <a href="../LOGIN/loginpage.php">Login here</a></p>
     </div>
 </div>
 
