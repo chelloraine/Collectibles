@@ -261,41 +261,10 @@ button:hover {
         </div>
     </header>
     
-    <section class="featured-container">
-    <h2>Update Your Profile</h2>
-
-    <?php if (!empty($error_message)): ?>
-        <p class="error-message" style="color:red;"><?php echo $error_message; ?></p>
-    <?php endif; ?>
-
-    <?php if (!empty($success_message)): ?>
-        <p class="success-message" style="color:green;"><?php echo $success_message; ?></p>
-    <?php endif; ?>
-
-    <form action="profile.php" method="POST">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user_data['username']); ?>" required>
-
-        <label for="first_name">First Name</label>
-        <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($user_data['first_name']); ?>" required>
-
-        <label for="last_name">Last Name</label>
-        <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user_data['last_name']); ?>" required>
-
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
-
-        <label for="contact">Contact Number</label>
-        <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($user_data['contact']); ?>" required>
-
-        <label for="birthday">Birthday</label>
-        <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($user_data['birthday']); ?>" required>
-
-        <button type="submit">Update Profile</button>
-    </form>
-
+    
     <div class="links">
         <p><a href="change_password.php">Change Password</a></p>
     </div>
+    
 </body>
 </html>

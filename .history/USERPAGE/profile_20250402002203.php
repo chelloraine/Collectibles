@@ -24,9 +24,6 @@ $user_id = $_SESSION['customer_id'];
 
 // Function to fetch user data
 function getUserData($conn, $user_id) {
-    // Declare the variables outside of bind_result
-    $first_name = $last_name = $username = $email = $contact = $birthday = null;
-
     // Prepare the SQL query to select user data
     $stmt = $conn->prepare("SELECT First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth FROM Customers WHERE Customer_ID = ?");
     $stmt->bind_param("i", $user_id); // Bind the user ID
@@ -264,38 +261,39 @@ button:hover {
     <section class="featured-container">
     <h2>Update Your Profile</h2>
 
-    <?php if (!empty($error_message)): ?>
-        <p class="error-message" style="color:red;"><?php echo $error_message; ?></p>
-    <?php endif; ?>
-
-    <?php if (!empty($success_message)): ?>
-        <p class="success-message" style="color:green;"><?php echo $success_message; ?></p>
-    <?php endif; ?>
-
     <form action="profile.php" method="POST">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user_data['username']); ?>" required>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
 
-        <label for="first_name">First Name</label>
-        <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($user_data['first_name']); ?>" required>
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" required>
 
-        <label for="last_name">Last Name</label>
-        <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user_data['last_name']); ?>" required>
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" required>
 
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
 
-        <label for="contact">Contact Number</label>
-        <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($user_data['contact']); ?>" required>
+            <label for="contact">Contact Number</label>
+            <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($contact); ?>" required>
 
-        <label for="birthday">Birthday</label>
-        <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($user_data['birthday']); ?>" required>
+            <label for="birthday">Birthday</label>
+            <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>" required>
 
-        <button type="submit">Update Profile</button>
-    </form>
+            <button type="submit">Update Profile</button>
 
-    <div class="links">
-        <p><a href="change_password.php">Change Password</a></p>
-    </div>
+            <?php if (!empty($success_message)): ?>
+                <p class="success-message"><?php echo $success_message; ?></p>
+            <?php endif; ?>
+
+            <?php if (!empty($error_message)): ?>
+                <p class="error-message"><?php echo $error_message; ?></p>
+            <?php endif; ?>
+        </form>
+
+        <div class="links">
+            <p><a href="change_password.php">Change Password</a></p>
+</div>
+    </section>
 </body>
 </html>
