@@ -1,9 +1,4 @@
-<?php session_start();
-ini_set('session.gc_maxlifetime', 3600); // Keep session active for 1 hour
-session_regenerate_id(true);  // Regenerate session to avoid session fixation
-$_SESSION['customer_id'] = $customer_id;  // Ensure this matches the DB field
-
-?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
