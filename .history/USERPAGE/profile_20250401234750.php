@@ -244,38 +244,38 @@ button:hover {
     <section class="featured-container">
     <h2>Update Your Profile</h2>
 
-    <form action="profile.php" method="POST">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
+<?php if (!empty($error_message)): ?>
+    <p class="error-message" style="color:red;"><?php echo $error_message; ?></p>
+<?php endif; ?>
 
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" required>
+<?php if (!empty($success_message)): ?>
+    <p class="success-message" style="color:green;"><?php echo $success_message; ?></p>
+<?php endif; ?>
 
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" required>
+<form action="profile.php" method="POST">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" readonly>
 
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+    <label for="first_name">First Name</label>
+    <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" required>
 
-            <label for="contact">Contact Number</label>
-            <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($contact); ?>" required>
+    <label for="last_name">Last Name</label>
+    <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" required>
 
-            <label for="birthday">Birthday</label>
-            <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>" required>
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
 
-            <button type="submit">Update Profile</button>
+    <label for="contact">Contact Number</label>
+    <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($contact); ?>" required>
 
-            <?php if (!empty($success_message)): ?>
-                <p class="success-message"><?php echo $success_message; ?></p>
-            <?php endif; ?>
+    <label for="birthday">Birthday</label>
+    <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>" required>
 
-            <?php if (!empty($error_message)): ?>
-                <p class="error-message"><?php echo $error_message; ?></p>
-            <?php endif; ?>
-        </form>
+    <button type="submit">Update Profile</button>
+</form>
 
-        <div class="links">
-            <p><a href="change_password.php">Change Password</a></p>
+<div class="links">
+    <p><a href="change_password.php">Change Password</a></p>
 </div>
     </section>
 </body>

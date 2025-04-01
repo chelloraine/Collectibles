@@ -244,39 +244,77 @@ button:hover {
     <section class="featured-container">
     <h2>Update Your Profile</h2>
 
-    <form action="profile.php" method="POST">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
+$user_id = $_SESSION['customer_id'];
 
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" required>
+$stmt = $conn->prepare("SELECT First_Name, Last_Name, Username, Customer_Email, Contact_Number, Date_Of_Birth FROM Customers WHERE Customer_ID = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($first_name, $last_name, $username, $email, $contact, $birthday);
+$stmt->fetch();
+$stmt->close();
 
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" required>
+$error_message = "";
+$success_message = "";
 
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $first_name = htmlspecialchars(trim($_POST['first_name']));
+    $last_name = htmlspecialchars(trim($_POST['last_name']));
+    $new_username = htmlspecialchars(trim($_POST['username']));
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $contact = htmlspecialchars(trim($_POST['contact']));
+    $birthday = $_POST['birthday'];
 
-            <label for="contact">Contact Number</label>
-            <input type="tel" id="contact" name="contact" value="<?php echo htmlspecialchars($contact); ?>" required>
+    // Validate input fields
+    if (empty($first_name) || empty($last_name) || empty($new_username) || empty($email) || empty($contact) || empty($birthday)) {
+        $error_message = "All fields are required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_message = "Invalid email format.";
+    } elseif (!preg_match("/^[0-9]{10,15}$/", $contact)) { 
+        $error_message = "Invalid contact number (10-15 digits allowed).";
+    } elseif (strlen($new_username) < 4) {
+        $error_message = "Username must be at least 4 characters long.";
+    }
 
-            <label for="birthday">Birthday</label>
-            <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>" required>
+    // Check for duplicate email
+    if (empty($error_message)) {
+        $email_check = $conn->prepare("SELECT Customer_ID FROM Customers WHERE Customer_Email = ? AND Customer_ID != ?");
+        $email_check->bind_param("si", $email, $user_id);
+        $email_check->execute();
+        $email_check->store_result();
+        if ($email_check->num_rows > 0) {
+            $error_message = "This email is already in use!";
+        }
+        $email_check->close();
+    }
 
-            <button type="submit">Update Profile</button>
+    // Check for duplicate username
+    if (empty($error_message)) {
+        $username_check = $conn->prepare("SELECT Customer_ID FROM Customers WHERE Username = ? AND Customer_ID != ?");
+        $username_check->bind_param("si", $new_username, $user_id);
+        $username_check->execute();
+        $username_check->store_result();
+        if ($username_check->num_rows > 0) {
+            $error_message = "This username is already taken!";
+        }
+        $username_check->close();
+    }
 
-            <?php if (!empty($success_message)): ?>
-                <p class="success-message"><?php echo $success_message; ?></p>
-            <?php endif; ?>
+    if (empty($error_message)) {
+        // Update user profile
+        $update_stmt = $conn->prepare("UPDATE Customers SET First_Name = ?, Last_Name = ?, Username = ?, Customer_Email = ?, Contact_Number = ?, Date_Of_Birth = ? WHERE Customer_ID = ?");
+        $update_stmt->bind_param("ssssssi", $first_name, $last_name, $new_username, $email, $contact, $birthday, $user_id);
 
-            <?php if (!empty($error_message)): ?>
-                <p class="error-message"><?php echo $error_message; ?></p>
-            <?php endif; ?>
-        </form>
+        if ($update_stmt->execute()) {
+            $success_message = "Profile updated successfully.";
+        } else {
+            $error_message = "Error updating profile: " . $update_stmt->error;
+        }
+        $update_stmt->close();
+    }
+}
 
-        <div class="links">
-            <p><a href="change_password.php">Change Password</a></p>
-</div>
-    </section>
+$conn->close();
+?>
 </body>
 </html>
