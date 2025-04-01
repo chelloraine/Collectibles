@@ -2,6 +2,11 @@
 ini_set('session.gc_maxlifetime', 3600);  // Set session timeout to 1 hour
 session_start();
 
+if (isset($_SESSION['customer_id'])) {
+    $customer_id = $_SESSION['customer_id'];
+} else {
+    $customer_id = null; // If not set, set it to null or handle accordingly
+}
 // Database connection
 $host = "127.0.0.1";  
 $user = "root";       

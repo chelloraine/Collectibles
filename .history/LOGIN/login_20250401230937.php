@@ -1,5 +1,9 @@
 <?php
+<?php
 ini_set('session.gc_maxlifetime', 3600);  // Set session timeout to 1 hour
+session_start();
+?>
+
 session_start();
 
 // Database connection
