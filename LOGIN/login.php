@@ -3,11 +3,11 @@ session_start();
 include '../connection.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['Username']);
-    $password = trim($_POST['Password']);
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
     // Prepare and execute SQL query
-    $stmt = $conn->prepare("SELECT Customer_ID, Username, Password FROM Customers WHERE Username = ?");
+    $stmt = $conn->prepare("SELECT Customer_ID, Username, Password FROM customers WHERE Username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -38,8 +38,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
-header("Location: ../USERPAGE/userpage.php");
-exit;
-
 
 ?>
