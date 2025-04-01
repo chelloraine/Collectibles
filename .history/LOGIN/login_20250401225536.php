@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Customer found
             $row = $result->fetch_assoc();
             if (password_verify($password, $row['Password'])) {
-                $_SESSION['customer_id'] = $row['Customer_ID'];
+                $_SESSION['user_id'] = $row['Customer_ID'];
                 $_SESSION['username'] = $row['Username'];
                 $_SESSION['role'] = 'customer';
 
