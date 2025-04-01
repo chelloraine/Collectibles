@@ -2,12 +2,12 @@
 session_start();
 include_once("../connection.php");
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['Customer_ID'])) {
     header("Location: ../login.php");
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['Customer_ID'];
 
 // Fetch user details
 $stmt = $conn->prepare("SELECT First_Name, Last_Name, Customer_Email, Username,Contact_Number, Password FROM Customers WHERE id = ?");
