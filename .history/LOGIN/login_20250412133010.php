@@ -21,29 +21,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['Username']);
     $password = trim($_POST['Password']);
 
-// Check if the username exists in the Admins table using Admin_Username
-// Check if the username exists in the Admins table using Admin_Username
-$stmt = $conn->prepare("SELECT Admin_ID, Admin_Name, Admin_Username, Admin_Password FROM Admins WHERE LOWER(Admin_Username) = LOWER(?)");
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$result = $stmt->get_result();
+    // First, check if the username exists in the Admins table
+    $stmt = $conn->prepare("SELECT Admin_ID, Admin_Name, Admin_Password FROM Admins WHERE LOWER(Admin_Name) = LOWER(?)");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-if ($result->num_rows == 1) {
-    $row = $result->fetch_assoc();
-    if (password_verify($password, $row['Admin_Password'])) {
-        $_SESSION['Admin_id'] = $row['Admin_ID'];
-        $_SESSION['username'] = $row['Admin_Username'];
-        $_SESSION['role'] = 'admin';
-        $_SESSION['admin_logged_in'] = true;
+    if ($result->num_rows == 1) {
+        // Admin found
+        $row = $result->fetch_assoc();
+        if (password_verify($password, $row['Admin_Password'])) {
+            // Login success for Admin
+            $_SESSION['Admin_id'] = $row['Admin_ID'];
+            $_SESSION['username'] = $row['Admin_Name'];
+            $_SESSION['role'] = 'admin';
+            $_SESSION['admin_logged_in'] = true;
 
-        header("Location: http://localhost/website/ADMIN/adminpage.php");
-        exit;
-    } else {
-        $_SESSION['error'] = "Incorrect password for admin!";
-        header("Location: loginpage.php");
-        exit;
-    }
-
+            // Redirect to admin dashboard
+            header("Location: http://localhost/website/ADMIN/admin_dashboard.php");
+            exit;
+        } else {
+            // Incorrect password for Admin
+            $_SESSION['error'] = "Incorrect password for admin!";
+            header("Location: loginpage.php");
+            exit;
+        }
     } else {
         // Admin not found, check Customers table
         $stmt->close(); // Close the previous statement

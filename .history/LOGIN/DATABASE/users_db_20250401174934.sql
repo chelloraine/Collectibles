@@ -6,13 +6,10 @@ DROP DATABASE userlist_db;
 CREATE TABLE Admins (
     Admin_ID INT(11) AUTO_INCREMENT PRIMARY KEY,
     Admin_Name VARCHAR(100) NOT NULL,
-    Admin_Username VARCHAR (50),
     Admin_Email VARCHAR(50) UNIQUE NOT NULL,
     Admin_Password VARCHAR(255) NOT NULL
 );
-DROP TABLE Admins;
-SELECT * FROM Admins;
-INSERT INTO Admins (Admin_Name,Admin_Email,Admin_Password) VALUES ('Mechelle Monsale', 'mechellemonsale@gmai.com','banana01');
+
 -- Customers Table
 CREATE TABLE Customers (
     Customer_ID INT(11) AUTO_INCREMENT PRIMARY KEY,

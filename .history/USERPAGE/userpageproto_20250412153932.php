@@ -58,9 +58,9 @@ $featured_items = [
             </div>
 
             <div class="icons"> 
-                <div class="icon"><a href="/website/USERPAGE/my_account.php">My Account</a></div> 
+                <div class="icon"><a href="/website/USERPAGE/my_account.php"></a></div> 
                 <div class="icon"><a href="cart.php"></a></div>
-                <div class="icon"><a href="/website/USERPAGE/profilesettings.php">Profile Settings</a></div>
+                <div class="icon"><a href="/website/USERPAGE/profilesettings.php">Profile</a></div>
             </div>
         </div>
     </header>

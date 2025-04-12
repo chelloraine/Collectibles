@@ -1,24 +1,15 @@
 <?php
 session_start();
 
-// Check if admin is logged in
+// Ensure admin is logged in
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: ../loginpage.php");
     exit;
 }
 
-include '../connection.php';
+include '../connection.php'; // Make sure this connects correctly to your DB
 
-// Optional: Fetch current admin data
-$admin_id = $_SESSION['Admin_id'];
-$admin_query = $conn->prepare("SELECT Admin_Name, Admin_Username FROM Admins WHERE Admin_ID = ?");
-$admin_query->bind_param("i", $admin_id);
-$admin_query->execute();
-$admin_query->bind_result($admin_name, $admin_username);
-$admin_query->fetch();
-$admin_query->close();
-
-// Handle deleting selected customers
+// Delete selected customers
 if (isset($_POST['delete_selected']) && !empty($_POST['customer_ids'])) {
     $ids = implode(',', array_map('intval', $_POST['customer_ids']));
     $conn->query("DELETE FROM Customers WHERE Customer_ID IN ($ids)");
@@ -45,16 +36,11 @@ $result = $conn->query($sql);
         th { background-color: #f2f2f2; }
         .message { color: green; margin-bottom: 15px; }
         .logout { margin-bottom: 20px; }
-        .welcome { margin-bottom: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <h2>Admin Panel - Customer Management</h2>
-
-    <div class="welcome">
-        Welcome, <?php echo htmlspecialchars($admin_username ?? $admin_name); ?>!
-    </div>
 
     <?php if (isset($_SESSION['message'])): ?>
         <p class="message"><?php echo $_SESSION['message']; unset($_SESSION['message']); ?></p>
@@ -69,12 +55,12 @@ $result = $conn->query($sql);
             <thead>
                 <tr>
                     <th>Select</th>
-                    <th>ID</th>
+                    <th>Customer ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
                     <th>Username</th>
-                    <th>Contact</th>
+                    <th>Contact Number</th>
                     <th>Birthday</th>
                 </tr>
             </thead>
@@ -82,17 +68,18 @@ $result = $conn->query($sql);
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
                         <td><input type="checkbox" name="customer_ids[]" value="<?php echo $row['Customer_ID']; ?>"></td>
-                        <td><?php echo htmlspecialchars($row["Customer_ID"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["First_Name"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["Last_Name"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["Customer_Email"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["Username"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["Contact_Number"]); ?></td>
-                        <td><?php echo htmlspecialchars($row["Date_Of_Birth"]); ?></td>
+                        <td><?php echo htmlspecialchars($row['Customer_ID']); ?></td>
+                        <td><?php echo htmlspecialchars($row['First_Name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Last_Name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Customer_Email']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Username']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Contact_Number']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Date_Of_Birth']); ?></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
         </table>
+
         <br>
         <button type="submit" name="delete_selected">Delete Selected Customers</button>
     </form>

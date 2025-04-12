@@ -36,14 +36,16 @@ if ($result->num_rows == 1) {
         $_SESSION['role'] = 'admin';
         $_SESSION['admin_logged_in'] = true;
 
-        header("Location: http://localhost/website/ADMIN/adminpage.php");
+        header("Location: http://localhost/website/ADMIN/admin_dashboard.php");
         exit;
     } else {
         $_SESSION['error'] = "Incorrect password for admin!";
         header("Location: loginpage.php");
         exit;
     }
+}
 
+        }
     } else {
         // Admin not found, check Customers table
         $stmt->close(); // Close the previous statement
